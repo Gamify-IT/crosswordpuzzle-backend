@@ -20,26 +20,27 @@ public class GenerateCrossword {
     public Crossword generateCrossword(List<Question> questions){
         Crossword crossword = new Crossword(startRows,startColumns);
         for(int i = 0; i < interations; i++) {
-            createCrossword(crossword, questions);
+            Crossword currentCrossword = createCrossword(questions);
+            int crosswordScore = getScore(crossword);
+            int currentCrosswordScore = getScore(currentCrossword);
+            if(currentCrosswordScore>crosswordScore){
+                if(currentCrossword.getAnswer().size()==0){
+                    crossword = currentCrossword;
+                }
+            }
         }
         return crossword;
     }
 
-    private void createCrossword(Crossword crossword, List<Question> questions) {
+    private Crossword createCrossword(List<Question> questions) {
         ArrayList<String> answers = new ArrayList<>();
         questions.forEach(question -> {
             answers.add(question.getAnswer().toUpperCase());
         });
-        crossword.setAnswer(answers);
+        Crossword crossword = simpleCrossword(answers);
         crossword.setQuestions((ArrayList<Question>) questions);
-        Crossword currentCrossword = simpleCrossword(answers);
-        int currentScore = getScore(currentCrossword);
-        if(currentScore > score) {
-            if (answers.size() == 0) {
-                score = currentScore;
-                crossword = currentCrossword;
-            }
-        }
+        crossword.setAnswer(answers);
+        return crossword;
     }
 
     private Crossword simpleCrossword(ArrayList<String> answers){

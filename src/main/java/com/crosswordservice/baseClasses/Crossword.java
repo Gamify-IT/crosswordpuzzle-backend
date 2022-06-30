@@ -72,7 +72,7 @@ public class Crossword {
     }
 
     public void placeWordHorizontal(int x, int y, String word){
-        while(x<0){
+        while(x<=0){
             addColumnLeft();
             x++;
         }
@@ -80,13 +80,16 @@ public class Crossword {
         while(x+word.length()>getColumns()){
             addColumnRight();
         }
+
+        setTile("Horizontal",x-1,y);
+
         for(int i = 0; i<word.length() ; i++){
             setTile(String.valueOf(word.charAt(i)),x+i,y);
         }
     }
 
     public void placeWordVertical(int x, int y, String word) {
-        while(y<0){
+        while(y<=0){
             addRowTop();
             y++;
         }
@@ -94,6 +97,9 @@ public class Crossword {
         while(y+word.length()>getRows()){
             addRowBottom();
         }
+
+        setTile("Vertical",x,y-1);
+
         for(int i = 0; i<word.length() ; i++){
             setTile(String.valueOf(word.charAt(i)),x,y+i);
         }
