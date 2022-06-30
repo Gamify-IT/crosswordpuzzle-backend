@@ -2,6 +2,11 @@ package com.crosswordservice.baseClasses;
 
 import javax.persistence.*;
 import static javax.persistence.GenerationType.SEQUENCE;
+
+/**
+ * Class to save a question with the id of the configuration, the question
+ *  and the answer
+ */
 @Entity
 @Table(name = "questions")
 public class Question {

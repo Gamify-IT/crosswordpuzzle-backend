@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * Rest Controller for the crossword-puzzle backend
+ */
 @RestController
 public class CrosswordController {
 

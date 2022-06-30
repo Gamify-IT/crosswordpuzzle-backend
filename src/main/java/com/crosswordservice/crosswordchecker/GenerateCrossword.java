@@ -17,6 +17,11 @@ public class GenerateCrossword {
 
     }
 
+    /**
+     * Genereates a crossword with the given questions
+     * @param questions Questions to create a crossword-puzzle with
+     * @return a Crossword-puzzle
+     */
     public Crossword generateCrossword(List<Question> questions){
         Crossword crossword = new Crossword(startRows,startColumns);
         for(int i = 0; i < interations; i++) {

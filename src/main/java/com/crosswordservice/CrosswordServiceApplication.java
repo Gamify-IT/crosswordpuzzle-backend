@@ -7,6 +7,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Starts the application on the port which is set in the application.properties
+ * and allows the needed http methods for the frontend
+ * Sets the database login data from the file db.properties
+ */
+
 @SpringBootApplication
 @PropertySource(value = "classpath:db.properties")
 public class CrosswordServiceApplication {

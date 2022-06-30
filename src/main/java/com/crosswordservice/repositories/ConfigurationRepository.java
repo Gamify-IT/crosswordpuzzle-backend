@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Class to interact with the table configuration of the db
+ */
 @Repository
 public interface ConfigurationRepository extends JpaRepository<Configuration, Long>{
     Configuration findByName(String name);

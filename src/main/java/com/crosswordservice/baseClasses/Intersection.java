@@ -1,5 +1,8 @@
 package com.crosswordservice.baseClasses;
 
+/**
+ * Saves a intersection with a x and a y coordinate and a position in word
+ */
 public class Intersection {
     private int x;
     private int y;

@@ -3,6 +3,9 @@ package com.crosswordservice.baseClasses;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * creates a Crosswordpuzzle with the needed funtions  as a 2d String array
+ */
 public class Crossword {
     private final ArrayList<ArrayList<String>> crossword = new ArrayList<>();
     private final String emptyTile = "empty";

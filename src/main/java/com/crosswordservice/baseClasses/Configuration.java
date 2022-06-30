@@ -4,6 +4,9 @@ import javax.persistence.*;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
+/**
+ * Configuration for a crosswordpuzzle with a name
+ */
 @Entity
 @Table(name = "configuration")
 public class Configuration {

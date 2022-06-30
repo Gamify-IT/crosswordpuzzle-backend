@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * Class to interact with the table question of the db
+ */
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long>{
     public List<Question> findByInternalId(long internalId);

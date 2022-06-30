@@ -10,13 +10,16 @@ public class CrosswordChecker {
 
     }
 
+    /**
+     * creates a crossword with the given questions and return if every answer is placed
+     * on the crossword-puzzle
+     * @param questions questions with answers for a crossword-puzzle
+     * @return if all answers are placed on the crossword-puzzle return true else return false
+     */
     public boolean checkCrossword(List<Question> questions){
         GenerateCrossword crosswordGenerator = new GenerateCrossword();
         Crossword crossword = crosswordGenerator.generateCrossword(questions);
-        if(crossword.getAnswer().size()==0){
-            return true;
-        }
-        return false;
+        return crossword.getAnswer().size() == 0;
     }
 
 }
