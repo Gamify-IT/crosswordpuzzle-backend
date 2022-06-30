@@ -23,7 +23,7 @@ public class GenerateCrossword {
      * @return a Crossword-puzzle
      */
     public Crossword generateCrossword(List<Question> questions){
-        Crossword crossword = new Crossword(startRows,startColumns);
+        Crossword crossword = createCrossword(questions);
         for(int i = 0; i < interations; i++) {
             Crossword currentCrossword = createCrossword(questions);
             int crosswordScore = getScore(crossword);
@@ -34,6 +34,7 @@ public class GenerateCrossword {
                 }
             }
         }
+
         return crossword;
     }
 
