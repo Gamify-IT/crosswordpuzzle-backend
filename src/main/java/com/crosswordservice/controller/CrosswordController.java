@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ObjectInputFilter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -26,7 +27,27 @@ public class CrosswordController {
     @Autowired
     ConfigurationRepository configurationRepository;
 
-    @PostMapping("/create-config")
+    @PostMapping("/inputTestData")
+    public List<Question> inputTestData(){
+        Configuration config = new Configuration("test");
+        configurationRepository.save(config);
+
+        List<Question> questions = new ArrayList<>();
+
+        Question quest1 = new Question(config.getId(),"Which language extends Javascript with type safety?","Typescript");
+        Question quest2 = new Question(config.getId(),"How is the system of rules called which defines well-formed expressions?","Syntax");
+        Question quest3 = new Question(config.getId(),"Which loop allows to set the count of iterations in the head?","for-loop");
+        Question quest4 = new Question(config.getId(),"What is the abbreviation of the computing unit in a computer?","CPU");
+        questions.add(quest1);
+        questions.add(quest2);
+        questions.add(quest3);
+        questions.add(quest4);
+        questionRepository.saveAll(questions);
+
+        return questions;
+    }
+
+    @PostMapping("/create-configuration")
     public Configuration saveConfiguration(@RequestBody Configuration configuration){
         configurationRepository.save(configuration);
         return configuration;
@@ -34,7 +55,6 @@ public class CrosswordController {
 
     @PostMapping("/save-all-questions/{name}")
     public List<Question> saveAllQuestions(@RequestBody List<Question> questions, @PathVariable String name) {
-        System.out.println("try to save all "+questions.size()+" questions: ");
         Configuration config = configurationRepository.findByName(name);
         questions.forEach(question -> {
             question.setInternalId(config.getId());
@@ -66,14 +86,11 @@ public class CrosswordController {
 
     @GetMapping("/get-all-questions")
     public List<Question> getAllQuestions() {
-        System.out.println("try to get all questions");
         return (List<Question>) questionRepository.findAll();
     }
 
     @GetMapping("/get-questions/{name}")
     public List<Question> getAllQuestions(@PathVariable String name) {
-        System.out.println("try to get all questions");
-
         Configuration config = configurationRepository.findByName(name);
 
         List<Question> questions = questionRepository.findByInternalId(config.getId());

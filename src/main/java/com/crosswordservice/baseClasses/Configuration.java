@@ -30,6 +30,13 @@ public class Configuration {
             unique = true
     )
     private String name;
+    public Configuration(){
+
+    }
+
+    public Configuration(String name){
+        this.name = name;
+    }
 
     public long getId() {
         return id;

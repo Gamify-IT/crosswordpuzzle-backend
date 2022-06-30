@@ -33,7 +33,7 @@ public class Question {
     @Column(nullable = false)
     private String answer;
 
-    public Question(int internalId, String question, String answer) {
+    public Question(long internalId, String question, String answer) {
         this.internalId = internalId;
         this.question = question;
         this.answer = answer;
