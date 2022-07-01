@@ -14,7 +14,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 
 @SpringBootApplication
-@PropertySource(value = "classpath:db.properties")
 public class CrosswordServiceApplication {
 
 	public static void main(String[] args) {
