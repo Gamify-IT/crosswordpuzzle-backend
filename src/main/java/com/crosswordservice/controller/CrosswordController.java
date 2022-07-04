@@ -10,11 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.ObjectInputFilter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Rest Controller for the crossword-puzzle backend
@@ -52,7 +49,7 @@ public class CrosswordController {
      * @param configuration configuration which will be added
      * @return added configuration
      */
-    @PostMapping("/configuration")
+    @PostMapping("/configurations")
     public Configuration saveConfiguration(@RequestBody Configuration configuration){
         configurationRepository.save(configuration);
         return configuration;
@@ -99,7 +96,7 @@ public class CrosswordController {
      * @param id Id of a question
      * @return deleted question
      */
-    @DeleteMapping("/question/{id}")
+    @DeleteMapping("/questions/{id}")
     public Question removeQuestion(@PathVariable Long id){
         Question question = questionRepository.getReferenceById(id);
         questionRepository.deleteById(id);
@@ -121,7 +118,7 @@ public class CrosswordController {
      * @return list of questions of a configuration
      */
     @GetMapping("/questions/{name}")
-    public List<Question> getAllQuestions(@PathVariable String name) {
+    public List<Question> getAllQuestionsByConfigurationName(@PathVariable String name) {
         Configuration config = configurationRepository.findByName(name);
 
         List<Question> questions = questionRepository.findByInternalId(config.getId());
@@ -135,7 +132,7 @@ public class CrosswordController {
      * @return true, if a crossword-puzzle can be created, otherwise false.
      */
     @GetMapping("/validateCrossword")
-    public boolean getValidationCrossword(@RequestBody List<Question> questions){
+    public boolean isValidCrosswordPuzzle(@RequestBody List<Question> questions){
         CrosswordChecker crosswordChecker = new CrosswordChecker();
         return crosswordChecker.checkCrossword(questions);
     }
