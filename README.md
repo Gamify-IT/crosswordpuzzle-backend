@@ -12,7 +12,7 @@ Make sure you have the following installed:
 
 First you have to change the spring.datasource.username and the spring.datasource.password in the application.properties file. If you changed the properties of the postgres db, you also have to change spring.datasource.url.
 
-Run 
+### Run 
 ```sh
 mvn install
 ```
@@ -21,6 +21,25 @@ Go to the target folder and run
 ```sh
 java -jar crossword-service-0.0.1-SNAPSHOT.jar
 ```
+
+### testing database
+to setup a database with docker for testing you can use
+```sh
+docker run -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=test  --rm --name crosswordpuzzle-database postgres
+```
+To stop and remove it simply type
+```sh
+docker stop crosswordpuzzle-database
+```
+You can add test-questions with a simple post request to `/inputTestData`. To do thiis with curl simply type
+```sh
+curl --header "Content-Type: application/json"   --request POST   --data '{}'   http://localhost:8080/inputTestData
+```
+You can also add individual questiions by sending a post reqest with the question-data to . To do this with curl you can use
+```sh
+curl --header "Content-Type: application/json"   --request POST   --data '[{"question":"Foo?","answer":"Bar"}]'   http://localhost:8080/questions/test
+```
+
 ### Project structure
 
 | File / Directory                     | Description                          |
@@ -28,4 +47,4 @@ java -jar crossword-service-0.0.1-SNAPSHOT.jar
 | `pom.xml`                            | Maven configuration file.            |
 | `src/main`                           | Source folder with the java files.   |
 | `src/test`                           | Folder with the uni tests.           |
-| 
+
