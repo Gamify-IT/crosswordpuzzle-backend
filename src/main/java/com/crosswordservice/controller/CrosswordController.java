@@ -64,6 +64,9 @@ public class CrosswordController {
     @PostMapping("/questions/{name}")
     public List<Question> saveAllQuestions(@RequestBody List<Question> questions, @PathVariable String name) {
         Configuration config = configurationRepository.findByName(name);
+        if(config == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"configuration not found");
+        }
         questions.forEach(question -> {
             question.setInternalId(config.getId());
         });
@@ -81,7 +84,7 @@ public class CrosswordController {
     public List<Question> updateAllQuestions(@RequestBody List<Question> questions, @PathVariable String name){
         Configuration config = configurationRepository.findByName(name);
         if(config == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"id not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"configuration not found");
         }
         questionRepository.deleteByInternalId(config.getId());
         questions.forEach(question -> {
@@ -99,6 +102,9 @@ public class CrosswordController {
     @DeleteMapping("/questions/{id}")
     public Question removeQuestion(@PathVariable Long id){
         Question question = questionRepository.getReferenceById(id);
+        if(question == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"question not found");
+        }
         questionRepository.deleteById(id);
         return question;
     }
@@ -120,9 +126,10 @@ public class CrosswordController {
     @GetMapping("/questions/{name}")
     public List<Question> getAllQuestionsByConfigurationName(@PathVariable String name) {
         Configuration config = configurationRepository.findByName(name);
-
+        if(config == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"configuration not found");
+        }
         List<Question> questions = questionRepository.findByInternalId(config.getId());
-
         return questions;
     }
 
