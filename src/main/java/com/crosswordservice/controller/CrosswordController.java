@@ -47,13 +47,13 @@ public class CrosswordController {
         return questions;
     }
 
-    @PostMapping("/create-configuration")
+    @PostMapping("/configuration")
     public Configuration saveConfiguration(@RequestBody Configuration configuration){
         configurationRepository.save(configuration);
         return configuration;
     }
 
-    @PostMapping("/save-all-questions/{name}")
+    @PostMapping("/questions/{name}")
     public List<Question> saveAllQuestions(@RequestBody List<Question> questions, @PathVariable String name) {
         Configuration config = configurationRepository.findByName(name);
         questions.forEach(question -> {
@@ -63,7 +63,7 @@ public class CrosswordController {
         return questions;
     }
 
-    @PutMapping("/update-all-questions/{name}")
+    @PutMapping("/questions/{name}")
     public List<Question> updateAllQuestions(@RequestBody List<Question> questions, @PathVariable String name){
         Configuration config = configurationRepository.findByName(name);
         if(config == null){
@@ -77,19 +77,19 @@ public class CrosswordController {
         return questions;
     }
 
-    @DeleteMapping("/removeQuestion/{id}")
+    @DeleteMapping("/question/{id}")
     public Question removeQuestion(@PathVariable Long id){
         Question question = questionRepository.getReferenceById(id);
         questionRepository.deleteById(id);
         return question;
     }
 
-    @GetMapping("/get-all-questions")
+    @GetMapping("/questions")
     public List<Question> getAllQuestions() {
         return (List<Question>) questionRepository.findAll();
     }
 
-    @GetMapping("/get-questions/{name}")
+    @GetMapping("/questions/{name}")
     public List<Question> getAllQuestions(@PathVariable String name) {
         Configuration config = configurationRepository.findByName(name);
 
