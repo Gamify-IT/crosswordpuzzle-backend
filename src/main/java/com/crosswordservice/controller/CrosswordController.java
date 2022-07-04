@@ -47,12 +47,23 @@ public class CrosswordController {
         return questions;
     }
 
+    /**
+     * Adds a configuration
+     * @param configuration configuration which will be added
+     * @return added configuration
+     */
     @PostMapping("/configuration")
     public Configuration saveConfiguration(@RequestBody Configuration configuration){
         configurationRepository.save(configuration);
         return configuration;
     }
 
+    /**
+     * Adds questions to a configuration.
+     * @param questions question which will be added to the configuration
+     * @param name configuration name
+     * @return added questions
+     */
     @PostMapping("/questions/{name}")
     public List<Question> saveAllQuestions(@RequestBody List<Question> questions, @PathVariable String name) {
         Configuration config = configurationRepository.findByName(name);
@@ -63,6 +74,12 @@ public class CrosswordController {
         return questions;
     }
 
+    /**
+     * Updates the questions of a configuration.
+     * @param questions questions with an answer
+     * @param name configuration name
+     * @return updated questions.
+     */
     @PutMapping("/questions/{name}")
     public List<Question> updateAllQuestions(@RequestBody List<Question> questions, @PathVariable String name){
         Configuration config = configurationRepository.findByName(name);
@@ -77,6 +94,11 @@ public class CrosswordController {
         return questions;
     }
 
+    /**
+     * Deletes a question with the given id.
+     * @param id Id of a question
+     * @return deleted question
+     */
     @DeleteMapping("/question/{id}")
     public Question removeQuestion(@PathVariable Long id){
         Question question = questionRepository.getReferenceById(id);
@@ -84,11 +106,20 @@ public class CrosswordController {
         return question;
     }
 
+    /**
+     * Returns all questions
+     * @return all questions
+     */
     @GetMapping("/questions")
     public List<Question> getAllQuestions() {
         return (List<Question>) questionRepository.findAll();
     }
 
+    /**
+     * Returns all questions of a configuration
+     * @param name Configuration name
+     * @return list of questions of a configuration
+     */
     @GetMapping("/questions/{name}")
     public List<Question> getAllQuestions(@PathVariable String name) {
         Configuration config = configurationRepository.findByName(name);
@@ -98,6 +129,11 @@ public class CrosswordController {
         return questions;
     }
 
+    /**
+     * Validates if out of the given questions a crossword-puzzle can be created
+     * @param questions questions to create a crossword-puzzle
+     * @return true, if a crossword-puzzle can be created, otherwise false.
+     */
     @GetMapping("/validateCrossword")
     public boolean getValidationCrossword(@RequestBody List<Question> questions){
         CrosswordChecker crosswordChecker = new CrosswordChecker();
