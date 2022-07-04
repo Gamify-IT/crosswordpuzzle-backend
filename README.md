@@ -40,7 +40,10 @@ You can also add individual questiions by sending a post reqest with the questio
 curl --header "Content-Type: application/json"   --request POST   --data '[{"question":"Foo?","answer":"Bar"}]'   http://localhost:8080/questions/test
 ```
 
-### Project structure
+### Rest mappings
+Rest mappings are defined in [`src/main/java/com/crosswordservice/controller/CrosswordController.java`](src/main/java/com/crosswordservice/controller/CrosswordController.java)
+
+## Project structure
 
 | File / Directory                     | Description                          |
 |--------------------------------------|--------------------------------------|
