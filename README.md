@@ -25,7 +25,7 @@ java -jar crossword-service-0.0.1-SNAPSHOT.jar
 ### testing database
 to setup a database with docker for testing you can use
 ```sh
-docker run -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=test  --rm --name crosswordpuzzle-database postgres
+docker run -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=crosswordpuzzle  --rm --name crosswordpuzzle-database postgres
 ```
 To stop and remove it simply type
 ```sh
