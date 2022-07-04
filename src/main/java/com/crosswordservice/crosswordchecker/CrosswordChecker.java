@@ -17,7 +17,7 @@ public class CrosswordChecker {
      * @return if all answers are placed on the crossword-puzzle return true else return false
      */
     public boolean checkCrossword(List<Question> questions){
-        GenerateCrossword crosswordGenerator = new GenerateCrossword();
+        CrosswordGenerator crosswordGenerator = new CrosswordGenerator();
         Crossword crossword = crosswordGenerator.generateCrossword(questions);
         return crossword.getAnswer().size() == 0;
     }
