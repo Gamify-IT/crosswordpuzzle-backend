@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Rest Controller for the crossword-puzzle backend
@@ -51,7 +52,8 @@ public class CrosswordController {
      */
     @PostMapping("/configurations")
     public Configuration saveConfiguration(@RequestBody Configuration configuration){
-        configurationRepository.save(configuration);
+        Configuration persistentConfiguration = new Configuration(configuration.getName());
+        configurationRepository.save(persistentConfiguration);
         return configuration;
     }
 
@@ -96,17 +98,31 @@ public class CrosswordController {
 
     /**
      * Deletes a question with the given id.
+     *
      * @param id Id of a question
      * @return deleted question
      */
     @DeleteMapping("/questions/{id}")
-    public Question removeQuestion(@PathVariable Long id){
-        Question question = questionRepository.getReferenceById(id);
-        if(question == null){
+    public Optional<Question> removeQuestion(@PathVariable Long id){
+        if(!questionRepository.existsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"question not found");
         }
+        Optional<Question> question = questionRepository.findById(id);
+
         questionRepository.deleteById(id);
         return question;
+    }
+
+    @DeleteMapping("/configurations/{name}")
+    public Configuration removeConfiguration(@PathVariable String name){
+        Configuration config = configurationRepository.findByName(name);
+        if(config == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"configuration not found");
+        }
+        questionRepository.deleteByInternalId(config.getId());
+        configurationRepository.deleteById(config.getId());
+
+        return config;
     }
 
     /**
