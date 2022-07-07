@@ -27,7 +27,9 @@ public class CrosswordController {
     @PostMapping("/inputTestData")
     public List<Question> inputTestData(){
         Configuration config = new Configuration("test");
+        Configuration config2 = new Configuration("UML");
         configurationRepository.save(config);
+        configurationRepository.save(config2);
 
         List<Question> questions = new ArrayList<>();
 
@@ -35,10 +37,16 @@ public class CrosswordController {
         Question quest2 = new Question(config.getId(),"How is the system of rules called which defines well-formed expressions?","Syntax");
         Question quest3 = new Question(config.getId(),"Which loop allows to set the count of iterations in the head?","for-loop");
         Question quest4 = new Question(config.getId(),"What is the abbreviation of the computing unit in a computer?","CPU");
+        Question quest5 = new Question(config2.getId(),"Which Diagram is used to describe the structure of a system?","class-diagram");
+        Question quest6 = new Question(config2.getId(),"Which Diagram is used to describe a sequence?","sequence-diagram");
+        Question quest7 = new Question(config2.getId(),"Which Diagram is used to describe the components of a system?","component-diagram");
         questions.add(quest1);
         questions.add(quest2);
         questions.add(quest3);
         questions.add(quest4);
+        questions.add(quest5);
+        questions.add(quest6);
+        questions.add(quest7);
         questionRepository.saveAll(questions);
 
         return questions;
