@@ -54,7 +54,7 @@ public class CrosswordController {
     public Configuration saveConfiguration(@RequestBody Configuration configuration){
         Configuration persistentConfiguration = new Configuration(configuration.getName());
         configurationRepository.save(persistentConfiguration);
-        return configuration;
+        return persistentConfiguration;
     }
 
     /**
