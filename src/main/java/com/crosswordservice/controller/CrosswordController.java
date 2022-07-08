@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Rest Controller for the crossword-puzzle backend
@@ -27,7 +28,7 @@ public class CrosswordController {
     @PostMapping("/inputTestData")
     public List<Question> inputTestData(){
         Configuration config = new Configuration("test");
-        Configuration config2 = new Configuration("UML");
+        Configuration config2 = new Configuration("uml");
         configurationRepository.save(config);
         configurationRepository.save(config2);
 
@@ -59,6 +60,7 @@ public class CrosswordController {
      */
     @PostMapping("/configurations")
     public Configuration saveConfiguration(@RequestBody Configuration configuration){
+        configuration.setName(configuration.getName().toLowerCase());
         configurationRepository.save(configuration);
         return configuration;
     }
