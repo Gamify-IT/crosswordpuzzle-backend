@@ -15,6 +15,7 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long>{
     public List<Question> findByInternalId(long internalId);
+    public Question findById(long id);
 
     @Transactional
     @Modifying
