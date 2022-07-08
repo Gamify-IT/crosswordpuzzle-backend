@@ -103,14 +103,13 @@ public class CrosswordController {
      * @return deleted question
      */
     @DeleteMapping("/questions/{id}")
-    public Optional<Question> removeQuestion(@PathVariable Long id){
-        if(!questionRepository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"question not found");
-        }
+    public Question removeQuestion(@PathVariable Long id){
         Optional<Question> question = questionRepository.findById(id);
-
+        if(question.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "question not found");
+        }
         questionRepository.deleteById(id);
-        return question;
+        return question.get();
     }
 
     @DeleteMapping("/configurations/{name}")
