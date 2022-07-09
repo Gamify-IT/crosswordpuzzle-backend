@@ -1,6 +1,7 @@
 package com.crosswordservice.controller;
 
 import com.crosswordservice.baseClasses.Configuration;
+import com.crosswordservice.baseClasses.ConfigurationDTO;
 import com.crosswordservice.baseClasses.Question;
 import com.crosswordservice.crosswordchecker.CrosswordChecker;
 import com.crosswordservice.repositories.ConfigurationRepository;
@@ -59,10 +60,10 @@ public class CrosswordController {
      * @return added configuration
      */
     @PostMapping("/configurations")
-    public Configuration saveConfiguration(@RequestBody Configuration configuration){
-        configuration.setName(configuration.getName().toLowerCase());
-        configurationRepository.save(configuration);
-        return configuration;
+    public Configuration saveConfiguration(@RequestBody ConfigurationDTO configuration){
+        Configuration persistentConfiguration = new Configuration(configuration.getName().toLowerCase());
+        configurationRepository.save(persistentConfiguration);
+        return persistentConfiguration;
     }
 
     /**
