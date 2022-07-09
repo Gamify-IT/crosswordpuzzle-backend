@@ -107,17 +107,30 @@ public class CrosswordController {
 
     /**
      * Deletes a question with the given id.
+     *
      * @param id Id of a question
      * @return deleted question
      */
     @DeleteMapping("/questions/{id}")
     public Question removeQuestion(@PathVariable Long id){
-        Question question = questionRepository.getReferenceById(id);
-        if(question == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"question not found");
+        Optional<Question> question = questionRepository.findById(id);
+        if(question.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "question not found");
         }
         questionRepository.deleteById(id);
-        return question;
+        return question.get();
+    }
+
+    @DeleteMapping("/configurations/{name}")
+    public Configuration removeConfiguration(@PathVariable String name){
+        Configuration config = configurationRepository.findByName(name);
+        if(config == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"configuration not found");
+        }
+        questionRepository.deleteByInternalId(config.getId());
+        configurationRepository.deleteById(config.getId());
+
+        return config;
     }
 
     /**
