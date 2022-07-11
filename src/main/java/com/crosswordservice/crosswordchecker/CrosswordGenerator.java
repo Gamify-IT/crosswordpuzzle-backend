@@ -22,7 +22,6 @@ public class CrosswordGenerator {
      * Count of tries of the algorithm to place a word.
      */
     private int maxTries = 100;
-    private SecureRandom random = new SecureRandom();
     public CrosswordGenerator(){
 
     }
