@@ -62,14 +62,11 @@ public class CrosswordServiceApplicationTests {
 
     @Test
     void testDeleteConfiguration() throws Exception {
-        Configuration config1 = new Configuration("config1");
-        config1 = configurationRepository.save(config1);
-        Question question1 = new Question(config1.getId(),"Question1","Answer1");
-        question1 =questionRepository.save(question1);
+        Configuration config1 = configurationRepository.save(new Configuration("config1"));
+        Question question1 =questionRepository.save(new Question(config1.getId(),"Question1","Answer1"));
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-
 
         MvcResult result = mockMvc.perform(delete("/configurations/"+config1.getName()))
                 .andExpect(status().isOk())
@@ -78,7 +75,7 @@ public class CrosswordServiceApplicationTests {
         String content = result.getResponse().getContentAsString();
         Configuration deletedConfiguration = mapper.readValue(content, Configuration.class);
         assertFalse(questionRepository.existsById(question1.getId()));
-        assertFalse(configurationRepository.existsById(config1.getId()));
+        assertFalse(configurationRepository.existsById(deletedConfiguration.getId()));
         assertEquals(config1.getName(),deletedConfiguration.getName());
     }
 
@@ -273,8 +270,7 @@ public class CrosswordServiceApplicationTests {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Boolean resultValid = mapper.readValue(content, Boolean.class);
-        assertTrue(resultValid);
+        assertTrue(mapper.readValue(content, Boolean.class));
     }
 
     @Test

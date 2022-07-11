@@ -3,7 +3,6 @@ package com.crosswordservice.crosswordchecker;
 import com.crosswordservice.baseClasses.Crossword;
 import com.crosswordservice.baseClasses.Intersection;
 import com.crosswordservice.baseClasses.Question;
-import org.yaml.snakeyaml.emitter.ScalarAnalysis;
 
 import java.util.ArrayList;
 import java.util.Arrays;
