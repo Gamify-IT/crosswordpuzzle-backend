@@ -4,10 +4,8 @@ import com.crosswordservice.baseClasses.Crossword;
 import com.crosswordservice.baseClasses.Intersection;
 import com.crosswordservice.baseClasses.Question;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.security.SecureRandom;
+import java.util.*;
 
 public class CrosswordGenerator {
     /**
@@ -24,7 +22,6 @@ public class CrosswordGenerator {
      * Count of tries of the algorithm to place a word.
      */
     private int maxTries = 100;
-
     public CrosswordGenerator(){
 
     }
@@ -77,7 +74,7 @@ public class CrosswordGenerator {
         Crossword crossword = new Crossword(startColumns, startRows);
         int indexOfCurrentAnswer = 0;
         if(answers.size()>1) {
-            indexOfCurrentAnswer = random.nextInt(0, answers.size() - 1);
+            indexOfCurrentAnswer = randomNextInt(0, answers.size() - 1);
         }
         crossword.placeWordHorizontal(0,0,answers.get(indexOfCurrentAnswer));
         answers.remove(indexOfCurrentAnswer);
@@ -85,7 +82,7 @@ public class CrosswordGenerator {
         while(answers.size()>0 && tries < maxTries){
             indexOfCurrentAnswer = 0;
             if(answers.size()>1){
-                indexOfCurrentAnswer = random.nextInt(0,answers.size()-1);
+                indexOfCurrentAnswer = randomNextInt(0,answers.size()-1);
             }
             String currentAnswer = answers.get(indexOfCurrentAnswer);
             tries++;
@@ -109,7 +106,7 @@ public class CrosswordGenerator {
         while(intersections.size()>0){
             int indexOfCurrentIntersection = 0;
             if(intersections.size()>1){
-                indexOfCurrentIntersection = random.nextInt(0,intersections.size()-1);
+                indexOfCurrentIntersection = randomNextInt(0,intersections.size()-1);
             }
             Intersection currentIntersection = intersections.get(indexOfCurrentIntersection);
             intersections.remove(indexOfCurrentIntersection);
@@ -238,5 +235,9 @@ public class CrosswordGenerator {
         int score = 0;
         score += (crossword.getQuestions().size()-crossword.getAnswer().size())*100;
         return score;
+    }
+
+    private int randomNextInt(int min, int max){
+        return random.nextInt(max-min)+min;
     }
 }
