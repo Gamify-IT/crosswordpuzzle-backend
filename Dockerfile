@@ -1,10 +1,11 @@
 #
 # Build stage
 #
-FROM maven:3.6.3-openjdk-17-slim AS build
+FROM maven:3.8-openjdk-17-slim AS build
+COPY pom.xml /home/app/pom.xml
+RUN mvn -f /home/app/pom.xml install
 COPY src /home/app/src
-COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package
+RUN mvn -f /home/app/pom.xml package
 
 
 #
@@ -12,5 +13,6 @@ RUN mvn -f /home/app/pom.xml clean package
 #
 FROM openjdk:17-jdk-slim
 COPY --from=build /home/app/target/crossword-service-0.0.1-SNAPSHOT.jar /usr/local/lib/crossword-service.jar
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/usr/local/lib/crossword-service.jar", "--spring.datasource.url=jdbc:postgresql://host.docker.internal:5432/crosswordpuzzle"]
+EXPOSE 80
+ENV POSTGRES_URL "postgresql://localhost:5432/postgres"
+ENTRYPOINT /usr/local/openjdk-17/bin/java -jar /usr/local/lib/crossword-service.jar --spring.datasource.url=jdbc:${POSTGRES_URL} --server.port=80
