@@ -3,11 +3,12 @@ package com.crosswordservice.crosswordchecker;
 import com.crosswordservice.baseClasses.Crossword;
 import com.crosswordservice.baseClasses.Intersection;
 import com.crosswordservice.baseClasses.Question;
+import org.yaml.snakeyaml.emitter.ScalarAnalysis;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.security.SecureRandom;
 
 public class CrosswordGenerator {
     /**
@@ -17,6 +18,9 @@ public class CrosswordGenerator {
     private int score = Integer.MIN_VALUE;
     private int startRows = 10;
     private int startColumns = 10;
+
+    private SecureRandom random = new SecureRandom();
+
     /**
      * Count of tries of the algorithm to place a word.
      */
@@ -74,7 +78,7 @@ public class CrosswordGenerator {
         Crossword crossword = new Crossword(startColumns, startRows);
         int indexOfCurrentAnswer = 0;
         if(answers.size()>1) {
-            indexOfCurrentAnswer = ThreadLocalRandom.current().nextInt(0, answers.size() - 1);
+            indexOfCurrentAnswer = random.nextInt(0, answers.size() - 1);
         }
         crossword.placeWordHorizontal(0,0,answers.get(indexOfCurrentAnswer));
         answers.remove(indexOfCurrentAnswer);
@@ -82,7 +86,7 @@ public class CrosswordGenerator {
         while(answers.size()>0 && tries < maxTries){
             indexOfCurrentAnswer = 0;
             if(answers.size()>1){
-                indexOfCurrentAnswer = ThreadLocalRandom.current().nextInt(0,answers.size()-1);
+                indexOfCurrentAnswer = random.nextInt(0,answers.size()-1);
             }
             String currentAnswer = answers.get(indexOfCurrentAnswer);
             tries++;
@@ -106,7 +110,7 @@ public class CrosswordGenerator {
         while(intersections.size()>0){
             int indexOfCurrentIntersection = 0;
             if(intersections.size()>1){
-                indexOfCurrentIntersection = ThreadLocalRandom.current().nextInt(0,intersections.size()-1);
+                indexOfCurrentIntersection = random.nextInt(0,intersections.size()-1);
             }
             Intersection currentIntersection = intersections.get(indexOfCurrentIntersection);
             intersections.remove(indexOfCurrentIntersection);
