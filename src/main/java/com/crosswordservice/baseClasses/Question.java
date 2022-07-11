@@ -39,6 +39,11 @@ public class Question {
         this.answer = answer;
     }
 
+    public Question(String question, String answer) {
+        this.question = question;
+        this.answer = answer;
+    }
+
     public Question() {
 
     }

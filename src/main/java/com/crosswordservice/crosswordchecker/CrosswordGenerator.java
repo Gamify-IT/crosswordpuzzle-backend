@@ -15,6 +15,9 @@ public class CrosswordGenerator {
     private int score = Integer.MIN_VALUE;
     private int startRows = 10;
     private int startColumns = 10;
+
+    private SecureRandom random = new SecureRandom();
+
     /**
      * Count of tries of the algorithm to place a word.
      */
