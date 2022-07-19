@@ -1,17 +1,17 @@
-package com.crosswordservice.baseClasses;
+package com.crosswordservice.data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * creates a Crosswordpuzzle with the needed funtions  as a 2d String array
  */
 public class Crossword {
-    private final ArrayList<ArrayList<String>> crossword = new ArrayList<>();
-    private final String emptyTile = "empty";
-    private ArrayList<Question> questions = new ArrayList<>();
+    private final ArrayList<ArrayList<String>> crosswordPuzzle = new ArrayList<>();
+    private static final String emptyTile = "empty";
+    private List<Question> questions = new ArrayList<>();
 
-    private ArrayList<String> answer = new ArrayList<>();
+    private List<String> answer = new ArrayList<>();
     public Crossword() {
         addColumnRight();
     }
@@ -26,14 +26,14 @@ public class Crossword {
     }
 
     public void addRowTop(){
-        crossword.forEach(list -> {
-            list.add(0,emptyTile);
-        });
+        crosswordPuzzle.forEach(list ->
+            list.add(0,emptyTile)
+        );
     }
     public void addRowBottom(){
-        crossword.forEach(list -> {
-            list.add(emptyTile);
-        });
+        crosswordPuzzle.forEach(list ->
+            list.add(emptyTile)
+        );
     }
     public void addColumnLeft(){
 
@@ -41,37 +41,37 @@ public class Crossword {
         for(int i = 0; i<getRows(); i++){
             newList.add(emptyTile);
         }
-        crossword.add(0,newList);
+        crosswordPuzzle.add(0,newList);
     }
     public void addColumnRight(){
         ArrayList<String> newList = new ArrayList<>();
         for(int i = 0; i<getRows(); i++){
             newList.add(emptyTile);
         }
-        crossword.add(newList);
+        crosswordPuzzle.add(newList);
     }
 
-    public ArrayList<ArrayList<String>> getCrossword(){
-        return crossword;
+    public List<ArrayList<String>> getCrosswordPuzzle(){
+        return crosswordPuzzle;
     }
 
     public int getRows(){
-        if(crossword.size()>0){
-            return crossword.get(0).size();
+        if(crosswordPuzzle.isEmpty()){
+            return crosswordPuzzle.get(0).size();
         }
         return 0;
     }
 
     public int getColumns(){
-        return crossword.size();
+        return crosswordPuzzle.size();
     }
 
     private void setTile(String character, int x, int y){
-        crossword.get(x).set(y,character);
+        crosswordPuzzle.get(x).set(y,character);
     }
 
     public String getTile(int x, int y){
-        return crossword.get(x).get(y);
+        return crosswordPuzzle.get(x).get(y);
     }
 
     public void placeWordHorizontal(int x, int y, String word){
@@ -112,38 +112,22 @@ public class Crossword {
         if(x<0 || x>= getColumns()){
             return false;
         }
-        if(y<0 || y>= getRows()){
-            return false;
-        }
-        return true;
+        return y<0 && y>= getRows();
     }
 
-    public ArrayList<Question> getQuestions() {
+    public List<Question> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(ArrayList<Question> questions) {
+    public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
 
-    public ArrayList<String> getAnswer() {
+    public List<String> getAnswer() {
         return answer;
     }
 
-    public void setAnswer(ArrayList<String> answer) {
+    public void setAnswer(List<String> answer) {
         this.answer = answer;
-    }
-
-    public void print(){
-        for(int y = 0; y<getRows(); y++){
-            for(int x = 0; x<getColumns(); x++){
-                if(getTile(x,y).length()==1){
-                    System.out.print("    ");
-                }
-                System.out.print(getTile(x,y)+";");
-
-            }
-            System.out.println();
-        }
     }
 }

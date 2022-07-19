@@ -1,15 +1,13 @@
 package com.crosswordservice.crosswordchecker;
 
-import com.crosswordservice.baseClasses.Crossword;
-import com.crosswordservice.baseClasses.Question;
+import com.crosswordservice.data.Crossword;
+import com.crosswordservice.data.Question;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@NoArgsConstructor
 public class CrosswordChecker {
-    public CrosswordChecker(){
-
-    }
-
     /**
      * creates a crossword with the given questions and return if every answer is placed
      * on the crossword-puzzle
@@ -19,7 +17,7 @@ public class CrosswordChecker {
     public boolean checkCrossword(List<Question> questions){
         CrosswordGenerator crosswordGenerator = new CrosswordGenerator();
         Crossword crossword = crosswordGenerator.generateCrossword(questions);
-        return crossword.getAnswer().size() == 0;
+        return crossword.getAnswer().isEmpty();
     }
 
 }

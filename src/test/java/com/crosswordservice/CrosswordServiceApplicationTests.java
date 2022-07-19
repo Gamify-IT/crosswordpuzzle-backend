@@ -1,7 +1,7 @@
 package com.crosswordservice;
 
-import com.crosswordservice.baseClasses.Configuration;
-import com.crosswordservice.baseClasses.Question;
+import com.crosswordservice.data.Configuration;
+import com.crosswordservice.data.Question;
 import com.crosswordservice.controller.CrosswordController;
 import com.crosswordservice.repositories.ConfigurationRepository;
 import com.crosswordservice.repositories.QuestionRepository;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest(classes = CrosswordServiceApplication.class)
-public class CrosswordServiceApplicationTests {
+class CrosswordServiceApplicationTests {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -84,7 +84,7 @@ public class CrosswordServiceApplicationTests {
         Configuration config1 = new Configuration("config1");
         config1 = configurationRepository.save(config1);
         Question question1 = new Question();
-        question1.setQuestion("Question");
+        question1.setQuestionText("Question");
         question1.setAnswer("Answer");
 
         List<Question> questions = new ArrayList<>();
@@ -104,7 +104,7 @@ public class CrosswordServiceApplicationTests {
 
         String content = result.getResponse().getContentAsString();
         List<Question> createdQuestion = Arrays.asList(mapper.readValue(content, Question[].class));
-        assertEquals(question1.getQuestion(), createdQuestion.get(0).getQuestion());
+        assertEquals(question1.getQuestionText(), createdQuestion.get(0).getQuestionText());
         assertEquals(question1.getAnswer(), questionRepository.findById(createdQuestion.get(0).getId()).getAnswer());
         questionRepository.deleteById(createdQuestion.get(0).getId());
         configurationRepository.deleteById(config1.getId());
@@ -135,7 +135,7 @@ public class CrosswordServiceApplicationTests {
 
         String content = result.getResponse().getContentAsString();
         List<Question> updatedQuestion = Arrays.asList(mapper.readValue(content, Question[].class));
-        assertEquals(question2.getQuestion(), updatedQuestion.get(0).getQuestion());
+        assertEquals(question2.getQuestionText(), updatedQuestion.get(0).getQuestionText());
         assertEquals(question2.getAnswer(), questionRepository.findById(updatedQuestion.get(0).getId()).getAnswer());
         questionRepository.deleteById(updatedQuestion.get(0).getId());
         configurationRepository.deleteById(config1.getId());
@@ -160,7 +160,7 @@ public class CrosswordServiceApplicationTests {
         String content = result.getResponse().getContentAsString();
         Question deletedQuestion = mapper.readValue(content, Question.class);
         assertFalse(questionRepository.existsById(question1.getId()));
-        assertEquals(question1.getQuestion(),deletedQuestion.getQuestion());
+        assertEquals(question1.getQuestionText(),deletedQuestion.getQuestionText());
         configurationRepository.deleteById(config1.getId());
     }
 
@@ -186,9 +186,9 @@ public class CrosswordServiceApplicationTests {
 
         String content = result.getResponse().getContentAsString();
         List<Question> allQuestions = Arrays.asList(mapper.readValue(content, Question[].class));
-        assertEquals(questionList.get(0).getQuestion(), allQuestions.get(0).getQuestion());
+        assertEquals(questionList.get(0).getQuestionText(), allQuestions.get(0).getQuestionText());
         assertEquals(questionList.get(0).getAnswer(), questionRepository.findById(allQuestions.get(0).getId()).getAnswer());
-        assertEquals(questionList.get(1).getQuestion(), allQuestions.get(1).getQuestion());
+        assertEquals(questionList.get(1).getQuestionText(), allQuestions.get(1).getQuestionText());
         assertEquals(questionList.get(1).getAnswer(), questionRepository.findById(allQuestions.get(1).getId()).getAnswer());
 
         configurationRepository.deleteById(config1.getId());
@@ -216,9 +216,9 @@ public class CrosswordServiceApplicationTests {
 
         String content = result.getResponse().getContentAsString();
         List<Question> allQuestions = Arrays.asList(mapper.readValue(content, Question[].class));
-        assertEquals(question1.getQuestion(), allQuestions.get(0).getQuestion());
+        assertEquals(question1.getQuestionText(), allQuestions.get(0).getQuestionText());
         assertEquals(question1.getAnswer(), questionRepository.findById(allQuestions.get(0).getId()).getAnswer());
-        assertEquals(question2.getQuestion(), allQuestions.get(1).getQuestion());
+        assertEquals(question2.getQuestionText(), allQuestions.get(1).getQuestionText());
         assertEquals(question2.getAnswer(), questionRepository.findById(allQuestions.get(1).getId()).getAnswer());
 
         controller.removeConfiguration(config1.getName());
@@ -235,9 +235,9 @@ public class CrosswordServiceApplicationTests {
 
         String content = result.getResponse().getContentAsString();
         List<Question> allQuestions = Arrays.asList(mapper.readValue(content, Question[].class));
-        assertEquals("Which language extends Javascript with type safety?", allQuestions.get(0).getQuestion());
+        assertEquals("Which language extends Javascript with type safety?", allQuestions.get(0).getQuestionText());
         assertEquals("Typescript", questionRepository.findById(allQuestions.get(0).getId()).getAnswer());
-        assertEquals("How is the system of rules called which defines well-formed expressions?", allQuestions.get(1).getQuestion());
+        assertEquals("How is the system of rules called which defines well-formed expressions?", allQuestions.get(1).getQuestionText());
         assertEquals("Syntax", questionRepository.findById(allQuestions.get(1).getId()).getAnswer());
 
         controller.removeConfiguration("test");
@@ -271,11 +271,5 @@ public class CrosswordServiceApplicationTests {
 
         String content = result.getResponse().getContentAsString();
         assertTrue(mapper.readValue(content, Boolean.class));
-    }
-
-    @Test
-    void testMain(){
-
-        CrosswordServiceApplication.main(new String[] {});
     }
 }

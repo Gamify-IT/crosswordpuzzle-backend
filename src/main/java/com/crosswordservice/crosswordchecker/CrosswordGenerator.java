@@ -1,20 +1,23 @@
 package com.crosswordservice.crosswordchecker;
 
-import com.crosswordservice.baseClasses.Crossword;
-import com.crosswordservice.baseClasses.Intersection;
-import com.crosswordservice.baseClasses.Question;
+import com.crosswordservice.data.Crossword;
+import com.crosswordservice.data.Intersection;
+import com.crosswordservice.data.Question;
+import lombok.NoArgsConstructor;
 
 import java.security.SecureRandom;
 import java.util.*;
 
+@NoArgsConstructor
 public class CrosswordGenerator {
     /**
      * Count of crosswords generated and compared by getScore() function
      */
     private int interations = 10;
-    private int score = Integer.MIN_VALUE;
     private int startRows = 10;
     private int startColumns = 10;
+
+    private final String empty = "empty";
 
     private SecureRandom random = new SecureRandom();
 
@@ -22,9 +25,6 @@ public class CrosswordGenerator {
      * Count of tries of the algorithm to place a word.
      */
     private int maxTries = 100;
-    public CrosswordGenerator(){
-
-    }
 
     /**
      * Genereates a crossword with the given questions
@@ -37,10 +37,8 @@ public class CrosswordGenerator {
             Crossword currentCrossword = createCrossword(questions);
             int crosswordScore = getScore(crossword);
             int currentCrosswordScore = getScore(currentCrossword);
-            if(currentCrosswordScore>crosswordScore){
-                if(currentCrossword.getAnswer().size()==0){
-                    crossword = currentCrossword;
-                }
+            if(currentCrosswordScore>crosswordScore && currentCrossword.getAnswer().isEmpty()){
+                crossword = currentCrossword;
             }
         }
 
@@ -56,9 +54,9 @@ public class CrosswordGenerator {
      */
     private Crossword createCrossword(List<Question> questions) {
         ArrayList<String> answers = new ArrayList<>();
-        questions.forEach(question -> {
-            answers.add(question.getAnswer().toUpperCase());
-        });
+        questions.forEach(question ->
+            answers.add(question.getAnswer().toUpperCase())
+        );
         Crossword crossword = simpleCrossword(answers);
         crossword.setQuestions((ArrayList<Question>) questions);
         crossword.setAnswer(answers);
@@ -79,7 +77,7 @@ public class CrosswordGenerator {
         crossword.placeWordHorizontal(0,0,answers.get(indexOfCurrentAnswer));
         answers.remove(indexOfCurrentAnswer);
         int tries = 0;
-        while(answers.size()>0 && tries < maxTries){
+        while(!answers.isEmpty() && tries < maxTries){
             indexOfCurrentAnswer = 0;
             if(answers.size()>1){
                 indexOfCurrentAnswer = randomNextInt(0,answers.size()-1);
@@ -103,7 +101,7 @@ public class CrosswordGenerator {
      */
     private boolean tryPlaceWord(String word, Crossword crossword) {
         ArrayList<Intersection> intersections = getIntersections(word, crossword);
-        while(intersections.size()>0){
+        while(!intersections.isEmpty()){
             int indexOfCurrentIntersection = 0;
             if(intersections.size()>1){
                 indexOfCurrentIntersection = randomNextInt(0,intersections.size()-1);
@@ -133,18 +131,15 @@ public class CrosswordGenerator {
         for(int i = 0; i<characters.size(); i++){
             int currentX = intersection.getX();
             int currentY = intersection.getY()-intersection.getPositionInWord()+i;
-            if(crossword.checkInBounds(currentX, currentY)) {
-                if(!(characters.get(i).equals(crossword.getTile(currentX,currentY)))){
-                    if(!(crossword.getTile(currentX,currentY).equals("empty"))){
-                        return false;
-                    }
-                }
-            }
-        }
-        if(intersection.getY()-intersection.getPositionInWord()-1>= 0){
-            if(!(crossword.getTile(intersection.getX(),intersection.getY() - intersection.getPositionInWord() -1).equals("empty"))){
+            if(crossword.checkInBounds(currentX, currentY)
+                    && !(characters.get(i).equals(crossword.getTile(currentX,currentY)))
+                    && !(crossword.getTile(currentX,currentY).equals(empty))) {
                 return false;
             }
+        }
+        if(intersection.getY()-intersection.getPositionInWord()-1>= 0
+        && !(crossword.getTile(intersection.getX(),intersection.getY() - intersection.getPositionInWord() -1).equals(empty))){
+            return false;
         }
         crossword.placeWordVertical(intersection.getX(), intersection.getY()-intersection.getPositionInWord(), word);
         return true;
@@ -162,18 +157,15 @@ public class CrosswordGenerator {
         for(int i = 0; i<characters.size(); i++){
             int currentX = intersection.getX()-intersection.getPositionInWord()+i;
             int currentY = intersection.getY();
-            if(crossword.checkInBounds(currentX, currentY)) {
-                if(!(characters.get(i).equals(crossword.getTile(currentX,currentY)))){
-                    if(!(crossword.getTile(currentX,currentY).equals("empty"))){
-                        return false;
-                    }
-                }
-            }
-        }
-        if(intersection.getX()-intersection.getPositionInWord()-1>= 0){
-            if(!(crossword.getTile(intersection.getX() - intersection.getPositionInWord() -1,intersection.getY()).equals("empty"))){
+            if(crossword.checkInBounds(currentX, currentY)
+            && !(characters.get(i).equals(crossword.getTile(currentX,currentY)))
+            && !(crossword.getTile(currentX,currentY).equals(empty))) {
                 return false;
             }
+        }
+        if(intersection.getX()-intersection.getPositionInWord()-1>= 0
+        && !(crossword.getTile(intersection.getX() - intersection.getPositionInWord() -1,intersection.getY()).equals(empty))){
+            return false;
         }
         crossword.placeWordHorizontal(intersection.getX()-intersection.getPositionInWord(), intersection.getY(), word);
         return true;

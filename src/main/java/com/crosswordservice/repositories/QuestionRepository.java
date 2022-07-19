@@ -1,6 +1,6 @@
 package com.crosswordservice.repositories;
 
-import com.crosswordservice.baseClasses.Question;
+import com.crosswordservice.data.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,8 +1,8 @@
 package com.crosswordservice.controller;
 
-import com.crosswordservice.baseClasses.Configuration;
-import com.crosswordservice.baseClasses.ConfigurationDTO;
-import com.crosswordservice.baseClasses.Question;
+import com.crosswordservice.data.Configuration;
+import com.crosswordservice.data.ConfigurationDTO;
+import com.crosswordservice.data.Question;
 import com.crosswordservice.crosswordchecker.CrosswordChecker;
 import com.crosswordservice.repositories.ConfigurationRepository;
 import com.crosswordservice.repositories.QuestionRepository;
@@ -21,6 +21,7 @@ import java.util.Optional;
  */
 @RestController
 public class CrosswordController {
+    private final String configNotfound = "Configuration not found";
 
     @Autowired
     QuestionRepository questionRepository;
@@ -77,11 +78,11 @@ public class CrosswordController {
     public List<Question> saveAllQuestions(@RequestBody List<Question> questions, @PathVariable String name) {
         Configuration config = configurationRepository.findByName(name);
         if(config == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"configuration not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,configNotfound);
         }
-        questions.forEach(question -> {
-            question.setInternalId(config.getId());
-        });
+        questions.forEach(question ->
+            question.setInternalId(config.getId())
+        );
         questionRepository.saveAll(questions);
         return questions;
     }
@@ -96,12 +97,12 @@ public class CrosswordController {
     public List<Question> updateAllQuestions(@RequestBody List<Question> questions, @PathVariable String name){
         Configuration config = configurationRepository.findByName(name);
         if(config == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"configuration not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,configNotfound);
         }
         questionRepository.deleteByInternalId(config.getId());
-        questions.forEach(question -> {
-            question.setInternalId(config.getId());
-        });
+        questions.forEach(question ->
+            question.setInternalId(config.getId())
+        );
         questionRepository.saveAll(questions);
         return questions;
     }
@@ -126,7 +127,7 @@ public class CrosswordController {
     public Configuration removeConfiguration(@PathVariable String name){
         Configuration config = configurationRepository.findByName(name);
         if(config == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"configuration not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,configNotfound);
         }
         questionRepository.deleteByInternalId(config.getId());
         configurationRepository.deleteById(config.getId());
@@ -140,7 +141,7 @@ public class CrosswordController {
      */
     @GetMapping("/questions")
     public List<Question> getAllQuestions() {
-        return (List<Question>) questionRepository.findAll();
+        return questionRepository.findAll();
     }
 
     /**
@@ -152,10 +153,9 @@ public class CrosswordController {
     public List<Question> getAllQuestionsByConfigurationName(@PathVariable String name) {
         Configuration config = configurationRepository.findByName(name);
         if(config == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"configuration not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,configNotfound);
         }
-        List<Question> questions = questionRepository.findByInternalId(config.getId());
-        return questions;
+        return questionRepository.findByInternalId(config.getId());
     }
 
     /**

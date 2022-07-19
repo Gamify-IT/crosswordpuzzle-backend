@@ -1,8 +1,11 @@
-package com.crosswordservice.baseClasses;
+package com.crosswordservice.data;
+
+import lombok.Data;
 
 /**
  * Saves a intersection with a x and a y coordinate and a position in word
  */
+@Data
 public class Intersection {
     private int x;
     private int y;
@@ -11,17 +14,5 @@ public class Intersection {
         this.x = x;
         this.y = y;
         this.positionInWord = positionInWord;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getPositionInWord() {
-        return positionInWord;
     }
 }
