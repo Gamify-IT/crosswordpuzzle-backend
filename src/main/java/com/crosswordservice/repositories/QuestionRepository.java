@@ -8,17 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Class to interact with the table question of the db
  */
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long>{
-    public List<Question> findByInternalId(long internalId);
-    public Question findById(long id);
-
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM Question WHERE internalId = :internalId")
-    Integer deleteByInternalId(long internalId);
 }

@@ -1,19 +1,29 @@
 package com.crosswordservice.data;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.lang.Nullable;
+
+import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConfigurationDTO {
-    private long id;
+    @Nullable
+     UUID id;
 
-    private String name;
+     String name;
 
-    public void setName(String name) {
-        this.name = name;
+     Set<QuestionDTO> questions;
+
+     public ConfigurationDTO(final String name, final Set<QuestionDTO> questions){
+         this.name = name;
+         this.questions = questions;
     }
 }
