@@ -1,13 +1,19 @@
 package com.crosswordservice;
 
 import com.crosswordservice.data.Configuration;
+import com.crosswordservice.data.ConfigurationDTO;
 import com.crosswordservice.data.Question;
-import com.crosswordservice.controller.CrosswordController;
+import com.crosswordservice.data.QuestionDTO;
+import com.crosswordservice.mapper.ConfigurationMapper;
+import com.crosswordservice.mapper.QuestionMapper;
 import com.crosswordservice.repositories.ConfigurationRepository;
 import com.crosswordservice.repositories.QuestionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,9 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,213 +40,223 @@ class CrosswordServiceApplicationTests {
     @Autowired
     private ConfigurationRepository configurationRepository;
     @Autowired
-    private CrosswordController controller;
+    private ConfigurationMapper configurationMapper;
+    @Autowired
+    private QuestionMapper questionMapper;
+
+    private final String API_URL = "/api/v1/minigames/crosswordpuzzle/configurations";
+    private ObjectMapper objectMapper;
+    private Configuration initialConfig;
+    private ConfigurationDTO initialConfigDTO;
+
+    @BeforeEach
+    void createTestData() {
+        configurationRepository.deleteAll();
+        questionRepository.deleteAll();
+        final Question question1 = new Question("QuestionInit1","AnswerInit1");
+        final Question question2 = new Question("QuestionInit2","AnswerInit2");
+        final Configuration config = new Configuration("configInit1", Set.of(question1,question2));
+        initialConfig = configurationRepository.save(config);
+        initialConfigDTO = configurationMapper.configurationToConfigurationDTO(initialConfig);
+
+        objectMapper = new ObjectMapper();
+    }
+
+    @AfterEach
+    public void deleteTestData() {
+        configurationRepository.deleteAll();
+        questionRepository.deleteAll();
+    }
 
     @Test
-    void testCreateConfigurations() throws Exception {
-        Configuration config1 = new Configuration("config1");
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(config1);
-
-
-        MvcResult result = mockMvc.perform(post("/configurations")
-                .content(requestJson).contentType(MediaType.APPLICATION_JSON
-                ))
+    public void getConfigurations() throws Exception {
+        final MvcResult result = mockMvc
+                .perform(get(API_URL).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
+        final List<ConfigurationDTO> configurations = Arrays.asList(
+                objectMapper.readValue(result.getResponse().getContentAsString(), ConfigurationDTO[].class)
+        );
+
+        assertSame(1, configurations.size());
+        assertEquals(initialConfigDTO.getName(), configurations.get(0).getName());
+        assertEquals(initialConfigDTO.getId(), configurations.get(0).getId());
+    }
+
+    @Test
+    public void getSpecificConfigurations() throws Exception {
+        final MvcResult result = mockMvc
+                .perform(get(API_URL+"/"+initialConfigDTO.getId()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        final ConfigurationDTO configuration = objectMapper.readValue(result.getResponse().getContentAsString(), ConfigurationDTO.class);
+
+        assertEquals(initialConfigDTO.getName(), configuration.getName());
+        assertEquals(initialConfigDTO.getId(), configuration.getId());
+    }
+
+    @Test
+    public void getSpecificConfiguration_DoesNotExist_ThrowsNotFound() throws Exception {
+        mockMvc.perform(get(API_URL + "/" + UUID.randomUUID())
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testCreateConfigurations() throws Exception {
+        QuestionDTO quest1 = new QuestionDTO("Question","Answer");
+        ConfigurationDTO config1 = new ConfigurationDTO("config1",Set.of(quest1));
+
+        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(config1);
+
+
+        MvcResult result = mockMvc.perform(post(API_URL)
+                .content(requestJson).contentType(MediaType.APPLICATION_JSON
+                ))
+                .andExpect(status().isCreated())
+                .andReturn();
+
         String content = result.getResponse().getContentAsString();
-        Configuration createdConfiguration = mapper.readValue(content, Configuration.class);
+        ConfigurationDTO createdConfiguration = objectMapper.readValue(content, ConfigurationDTO.class);
         assertEquals(config1.getName(), createdConfiguration.getName());
         assertEquals(config1.getName(), configurationRepository.findById(createdConfiguration.getId()).get().getName());
         configurationRepository.deleteById(createdConfiguration.getId());
     }
 
     @Test
-    void testDeleteConfiguration() throws Exception {
-        Configuration config1 = configurationRepository.save(new Configuration("config1"));
-        Question question1 =questionRepository.save(new Question(config1.getId(),"Question1","Answer1"));
+    void testUpdateConfigurations() throws Exception {
+        QuestionDTO quest1 = new QuestionDTO("Question","Answer");
+        ConfigurationDTO config1 = new ConfigurationDTO("config1",Set.of(quest1));
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(config1);
 
-        MvcResult result = mockMvc.perform(delete("/configurations/"+config1.getName()))
+
+        MvcResult result = mockMvc.perform(put(API_URL+"/"+initialConfigDTO.getId())
+                        .content(requestJson).contentType(MediaType.APPLICATION_JSON
+                        ))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Configuration deletedConfiguration = mapper.readValue(content, Configuration.class);
-        assertFalse(questionRepository.existsById(question1.getId()));
+        ConfigurationDTO updatedConfiguration = objectMapper.readValue(content, ConfigurationDTO.class);
+        assertEquals(config1.getName(), updatedConfiguration.getName());
+        assertEquals(config1.getName(), configurationRepository.findById(updatedConfiguration.getId()).get().getName());
+        configurationRepository.deleteById(updatedConfiguration.getId());
+    }
+
+    @Test
+    void testDeleteConfiguration() throws Exception {
+       MvcResult result = mockMvc.perform(delete(API_URL+"/"+initialConfig.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        Configuration deletedConfiguration = objectMapper.readValue(content, Configuration.class);
         assertFalse(configurationRepository.existsById(deletedConfiguration.getId()));
-        assertEquals(config1.getName(),deletedConfiguration.getName());
+        assertEquals(initialConfig.getName(),deletedConfiguration.getName());
     }
 
     @Test
     void testAddQuestions() throws Exception {
-        Configuration config1 = new Configuration("config1");
-        config1 = configurationRepository.save(config1);
-        Question question1 = new Question();
-        question1.setQuestionText("Question");
-        question1.setAnswer("Answer");
-
-        List<Question> questions = new ArrayList<>();
-        questions.add(question1);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(questions);
+        QuestionDTO question1 = new QuestionDTO("Question1","Answer1");
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(question1);
 
 
-        MvcResult result = mockMvc.perform(post("/questions/"+config1.getName())
+        MvcResult result = mockMvc.perform(post(API_URL+"/"+initialConfig.getId()+"/questions/")
                         .content(requestJson).contentType(MediaType.APPLICATION_JSON
                         ))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        List<Question> createdQuestion = Arrays.asList(mapper.readValue(content, Question[].class));
-        assertEquals(question1.getQuestionText(), createdQuestion.get(0).getQuestionText());
-        assertEquals(question1.getAnswer(), questionRepository.findById(createdQuestion.get(0).getId()).getAnswer());
-        questionRepository.deleteById(createdQuestion.get(0).getId());
-        configurationRepository.deleteById(config1.getId());
+        QuestionDTO createdQuestion = objectMapper.readValue(content, QuestionDTO.class);
+        assertEquals(question1.getQuestionText(), createdQuestion.getQuestionText());
+        assertEquals(question1.getAnswer(), questionRepository.findById(createdQuestion.getId()).get().getAnswer());
     }
+
 
     @Test
     void testUpdateQuestions() throws Exception {
-        Configuration config1 = new Configuration("config1");
-        config1 = configurationRepository.save(config1);
-        Question question1 = new Question(config1.getId(),"Question1","Answer1");
-        Question question2 = new Question("Question2","Answer2");
+        QuestionDTO question1 = new QuestionDTO("Question1","Answer1");
 
-        questionRepository.save(question1);
-        List<Question> questions = new ArrayList<>();
-        questions.add(question2);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(questions);
-
-
-        MvcResult result = mockMvc.perform(put("/questions/"+config1.getName())
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(question1);
+        List<UUID> ids = new ArrayList<>();
+        initialConfig.getQuestions().forEach(question -> {
+            ids.add(question.getId());
+        });
+        UUID idOfQuestion = ids.get(0);
+        MvcResult result = mockMvc.perform(put(API_URL+"/"+initialConfig.getId()+"/questions/"+idOfQuestion)
                         .content(requestJson).contentType(MediaType.APPLICATION_JSON
                         ))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        List<Question> updatedQuestion = Arrays.asList(mapper.readValue(content, Question[].class));
-        assertEquals(question2.getQuestionText(), updatedQuestion.get(0).getQuestionText());
-        assertEquals(question2.getAnswer(), questionRepository.findById(updatedQuestion.get(0).getId()).getAnswer());
-        questionRepository.deleteById(updatedQuestion.get(0).getId());
-        configurationRepository.deleteById(config1.getId());
+        QuestionDTO updatedQuestion = objectMapper.readValue(content, QuestionDTO.class);
+        assertEquals(question1.getQuestionText(), updatedQuestion.getQuestionText());
+        assertEquals(question1.getAnswer(), questionRepository.findById(updatedQuestion.getId()).get().getAnswer());
+    }
+
+    @Test
+    void testUpdateQuestions_DoesNotExist_ThrowsNotFoundException() throws Exception {
+        QuestionDTO question1 = new QuestionDTO("Question1","Answer1");
+
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(question1);
+
+        mockMvc.perform(put(API_URL+"/"+initialConfig.getId()+"/questions/"+UUID.randomUUID())
+                        .content(requestJson).contentType(MediaType.APPLICATION_JSON
+                        ))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     void testDeleteQuestions() throws Exception {
-        Configuration config1 = new Configuration("config1");
-        config1 = configurationRepository.save(config1);
-        Question question1 = new Question(config1.getId(),"Question1","Answer1");
 
-        question1 =questionRepository.save(question1);
+        AtomicReference<QuestionDTO> question = new AtomicReference<>(new QuestionDTO());
+        initialConfigDTO.getQuestions().forEach(questionDTO -> {
+            question.set(questionDTO);
+        });
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-
-
-        MvcResult result = mockMvc.perform(delete("/questions/"+question1.getId()))
+        MvcResult result = mockMvc.perform(delete(API_URL+"/"+initialConfigDTO.getId()+"/questions/"+question.get().getId()))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Question deletedQuestion = mapper.readValue(content, Question.class);
-        assertFalse(questionRepository.existsById(question1.getId()));
-        assertEquals(question1.getQuestionText(),deletedQuestion.getQuestionText());
-        configurationRepository.deleteById(config1.getId());
+        QuestionDTO deletedQuestion = objectMapper.readValue(content, QuestionDTO.class);
+        assertFalse(questionRepository.existsById(question.get().getId()));
+        assertEquals(question.get().getQuestionText(),deletedQuestion.getQuestionText());
     }
 
     @Test
-    void testGetAllQuestions() throws Exception {
-        Configuration config1 = new Configuration("config1");
-        config1 = configurationRepository.save(config1);
-        Question question1 = new Question(config1.getId(),"Question1","Answer1");
-        Question question2 = new Question(config1.getId(),"Question2","Answer2");
+    void testDeleteQuestions_DoesNotExist_ThrowsNotFoundException() throws Exception {
 
-        question1 = questionRepository.save(question1);
-        question2 = questionRepository.save(question2);
+        AtomicReference<QuestionDTO> question = new AtomicReference<>(new QuestionDTO());
+        initialConfigDTO.getQuestions().forEach(questionDTO -> {
+            question.set(questionDTO);
+        });
 
-        List<Question> questionList = questionRepository.findAll();
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-
-
-        MvcResult result = mockMvc.perform(get("/questions/"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        List<Question> allQuestions = Arrays.asList(mapper.readValue(content, Question[].class));
-        assertEquals(questionList.get(0).getQuestionText(), allQuestions.get(0).getQuestionText());
-        assertEquals(questionList.get(0).getAnswer(), questionRepository.findById(allQuestions.get(0).getId()).getAnswer());
-        assertEquals(questionList.get(1).getQuestionText(), allQuestions.get(1).getQuestionText());
-        assertEquals(questionList.get(1).getAnswer(), questionRepository.findById(allQuestions.get(1).getId()).getAnswer());
-
-        configurationRepository.deleteById(config1.getId());
-        questionRepository.deleteById(question1.getId());
-        questionRepository.deleteById(question2.getId());
-    }
-
-    @Test
-    void testGetQuestions() throws Exception {
-        Configuration config1 = new Configuration("config1");
-        config1 = configurationRepository.save(config1);
-        Question question1 = new Question(config1.getId(),"Question1","Answer1");
-        Question question2 = new Question(config1.getId(),"Question2","Answer2");
-
-        question1 = questionRepository.save(question1);
-        question2 = questionRepository.save(question2);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-
-
-        MvcResult result = mockMvc.perform(get("/questions/"+config1.getName()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        List<Question> allQuestions = Arrays.asList(mapper.readValue(content, Question[].class));
-        assertEquals(question1.getQuestionText(), allQuestions.get(0).getQuestionText());
-        assertEquals(question1.getAnswer(), questionRepository.findById(allQuestions.get(0).getId()).getAnswer());
-        assertEquals(question2.getQuestionText(), allQuestions.get(1).getQuestionText());
-        assertEquals(question2.getAnswer(), questionRepository.findById(allQuestions.get(1).getId()).getAnswer());
-
-        controller.removeConfiguration(config1.getName());
+        mockMvc.perform(delete(API_URL+"/"+initialConfigDTO.getId()+"/questions/"+UUID.randomUUID()))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     void testTestData() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-
-        MvcResult result = mockMvc.perform(post("/inputTestData"))
+        MvcResult result = mockMvc.perform(post(API_URL+"/inputTestData"))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        List<Question> allQuestions = Arrays.asList(mapper.readValue(content, Question[].class));
-        assertEquals("Which language extends Javascript with type safety?", allQuestions.get(0).getQuestionText());
-        assertEquals("Typescript", questionRepository.findById(allQuestions.get(0).getId()).getAnswer());
-        assertEquals("How is the system of rules called which defines well-formed expressions?", allQuestions.get(1).getQuestionText());
-        assertEquals("Syntax", questionRepository.findById(allQuestions.get(1).getId()).getAnswer());
+        List<ConfigurationDTO> allQuestions = Arrays.asList(objectMapper.readValue(content, ConfigurationDTO[].class));
 
-        controller.removeConfiguration("test");
-        controller.removeConfiguration("uml");
     }
 
     @Test
@@ -257,19 +272,17 @@ class CrosswordServiceApplicationTests {
         questions.add(question3);
         questions.add(question4);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(questions);
 
 
-        MvcResult result = mockMvc.perform(get("/validateCrossword")
+        MvcResult result = mockMvc.perform(get("/api/v1/minigames/crosswordpuzzle/crosswordpuzzle/validateCrossword")
                         .content(requestJson).contentType(MediaType.APPLICATION_JSON
                         ))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertTrue(mapper.readValue(content, Boolean.class));
+        assertTrue(objectMapper.readValue(content, Boolean.class));
     }
 }

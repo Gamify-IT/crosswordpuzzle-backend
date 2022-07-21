@@ -33,7 +33,7 @@ public class ConfigController {
     ConfigService configService;
 
     @PostMapping("/inputTestData")
-    public List<Configuration> inputTestData(){
+    public List<ConfigurationDTO> inputTestData(){
         Set<Question> questions1 = new HashSet<>();
         Set<Question> questions2 = new HashSet<>();
 
@@ -54,13 +54,13 @@ public class ConfigController {
 
         Configuration config1 = new Configuration("test", questions1);
         Configuration config2 = new Configuration("uml", questions2);
-        configurationRepository.save(config1);
-        configurationRepository.save(config2);
+        config1 = configurationRepository.save(config1);
+        config2 = configurationRepository.save(config2);
 
         List<Configuration> configs = new ArrayList<>();
         configs.add(config1);
         configs.add(config2);
-        return configs;
+        return configurationMapper.configurationsToConfigurationDTOs(configs);
     }
 
     @GetMapping("")
@@ -69,7 +69,7 @@ public class ConfigController {
         return configurationMapper.configurationsToConfigurationDTOs(configurationRepository.findAll());
     }
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public ConfigurationDTO getConfiguration(@PathVariable final UUID id){
         log.debug("get configuration {}", id);
         return configurationMapper.configurationToConfigurationDTO(configService.getConfiguration(id));

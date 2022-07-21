@@ -56,7 +56,7 @@ public class Crossword {
     }
 
     public int getRows(){
-        if(crosswordPuzzle.isEmpty()){
+        if(!crosswordPuzzle.isEmpty()){
             return crosswordPuzzle.get(0).size();
         }
         return 0;

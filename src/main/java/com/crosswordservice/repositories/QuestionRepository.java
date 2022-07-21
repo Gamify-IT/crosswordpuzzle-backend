@@ -14,5 +14,5 @@ import java.util.UUID;
  * Class to interact with the table question of the db
  */
 @Repository
-public interface QuestionRepository extends JpaRepository<Question, Long>{
+public interface QuestionRepository extends JpaRepository<Question, UUID>{
 }
