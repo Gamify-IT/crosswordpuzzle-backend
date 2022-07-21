@@ -30,8 +30,8 @@ jobs:
 
     steps:
       - name: Sleep for 30 seconds
-          run: sleep 5s
-          shell: bash
+        run: sleep 5s
+        shell: bash
 
       - uses: actions/checkout@v2
         with:
