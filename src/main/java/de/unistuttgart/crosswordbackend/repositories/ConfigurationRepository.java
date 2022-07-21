@@ -1,6 +1,6 @@
-package com.crosswordservice.repositories;
+package de.unistuttgart.crosswordbackend.repositories;
 
-import com.crosswordservice.data.Configuration;
+import de.unistuttgart.crosswordbackend.data.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

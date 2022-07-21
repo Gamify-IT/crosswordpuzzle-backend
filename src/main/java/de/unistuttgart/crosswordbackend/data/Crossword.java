@@ -1,4 +1,4 @@
-package com.crosswordservice.data;
+package de.unistuttgart.crosswordbackend.data;
 
 import java.util.ArrayList;
 import java.util.List;

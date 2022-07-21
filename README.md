@@ -72,7 +72,7 @@ curl --header "Content-Type: application/json"   --request POST   --data '[{"que
 ```
 
 ### Rest mappings
-Rest mappings are defined in [`src/main/java/com/crosswordservice/controller/CrosswordController.java`](src/main/java/com/crosswordservice/controller/CrosswordController.java)
+Rest mappings are defined in [`src/main/java/com/crosswordservice/controller/CrosswordController.java`](src/main/java/de/unistuttgart/crosswordbackend/crosswordbackend/controller/CrosswordController.java)
 
 ## Project structure
 

@@ -1,4 +1,4 @@
-package com.crosswordservice.data;
+package de.unistuttgart.crosswordbackend.data;
 
 import lombok.AccessLevel;
 import lombok.Data;

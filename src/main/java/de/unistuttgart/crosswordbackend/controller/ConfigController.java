@@ -1,13 +1,13 @@
-package com.crosswordservice.controller;
+package de.unistuttgart.crosswordbackend.controller;
 
-import com.crosswordservice.data.Configuration;
-import com.crosswordservice.data.ConfigurationDTO;
-import com.crosswordservice.data.Question;
-import com.crosswordservice.data.QuestionDTO;
-import com.crosswordservice.mapper.ConfigurationMapper;
-import com.crosswordservice.mapper.QuestionMapper;
-import com.crosswordservice.repositories.ConfigurationRepository;
-import com.crosswordservice.service.ConfigService;
+import de.unistuttgart.crosswordbackend.data.Configuration;
+import de.unistuttgart.crosswordbackend.data.ConfigurationDTO;
+import de.unistuttgart.crosswordbackend.repositories.ConfigurationRepository;
+import de.unistuttgart.crosswordbackend.data.Question;
+import de.unistuttgart.crosswordbackend.data.QuestionDTO;
+import de.unistuttgart.crosswordbackend.mapper.ConfigurationMapper;
+import de.unistuttgart.crosswordbackend.mapper.QuestionMapper;
+import de.unistuttgart.crosswordbackend.service.ConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("api/v1/minigames/crosswordpuzzle/configurations")
+@RequestMapping("/configurations")
 @Slf4j
 public class ConfigController {
     private final String configNotFound = "Configuration not found";

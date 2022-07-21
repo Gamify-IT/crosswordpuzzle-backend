@@ -1,8 +1,6 @@
-package com.crosswordservice.data;
+package de.unistuttgart.crosswordbackend.data;
 
 import javax.persistence.*;
-
-import static javax.persistence.GenerationType.SEQUENCE;
 
 import lombok.AccessLevel;
 import lombok.Data;

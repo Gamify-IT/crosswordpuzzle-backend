@@ -1,7 +1,7 @@
-package com.crosswordservice.mapper;
+package de.unistuttgart.crosswordbackend.mapper;
 
-import com.crosswordservice.data.Configuration;
-import com.crosswordservice.data.ConfigurationDTO;
+import de.unistuttgart.crosswordbackend.data.Configuration;
+import de.unistuttgart.crosswordbackend.data.ConfigurationDTO;
 import org.mapstruct.Mapper;
 
 import java.util.List;

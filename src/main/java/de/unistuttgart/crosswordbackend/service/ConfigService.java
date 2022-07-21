@@ -1,13 +1,13 @@
-package com.crosswordservice.service;
+package de.unistuttgart.crosswordbackend.service;
 
-import com.crosswordservice.data.Configuration;
-import com.crosswordservice.data.ConfigurationDTO;
-import com.crosswordservice.data.Question;
-import com.crosswordservice.data.QuestionDTO;
-import com.crosswordservice.mapper.ConfigurationMapper;
-import com.crosswordservice.mapper.QuestionMapper;
-import com.crosswordservice.repositories.ConfigurationRepository;
-import com.crosswordservice.repositories.QuestionRepository;
+import de.unistuttgart.crosswordbackend.data.Configuration;
+import de.unistuttgart.crosswordbackend.data.ConfigurationDTO;
+import de.unistuttgart.crosswordbackend.data.Question;
+import de.unistuttgart.crosswordbackend.data.QuestionDTO;
+import de.unistuttgart.crosswordbackend.mapper.ConfigurationMapper;
+import de.unistuttgart.crosswordbackend.mapper.QuestionMapper;
+import de.unistuttgart.crosswordbackend.repositories.ConfigurationRepository;
+import de.unistuttgart.crosswordbackend.repositories.QuestionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

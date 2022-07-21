@@ -1,20 +1,17 @@
-package com.crosswordservice;
+package de.unistuttgart.crosswordbackend;
 
-import com.crosswordservice.data.Configuration;
-import com.crosswordservice.data.ConfigurationDTO;
-import com.crosswordservice.data.Question;
-import com.crosswordservice.data.QuestionDTO;
-import com.crosswordservice.mapper.ConfigurationMapper;
-import com.crosswordservice.mapper.QuestionMapper;
-import com.crosswordservice.repositories.ConfigurationRepository;
-import com.crosswordservice.repositories.QuestionRepository;
+import de.unistuttgart.crosswordbackend.data.Configuration;
+import de.unistuttgart.crosswordbackend.data.ConfigurationDTO;
+import de.unistuttgart.crosswordbackend.repositories.ConfigurationRepository;
+import de.unistuttgart.crosswordbackend.data.Question;
+import de.unistuttgart.crosswordbackend.data.QuestionDTO;
+import de.unistuttgart.crosswordbackend.mapper.ConfigurationMapper;
+import de.unistuttgart.crosswordbackend.mapper.QuestionMapper;
+import de.unistuttgart.crosswordbackend.repositories.QuestionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,7 +41,7 @@ class CrosswordServiceApplicationTests {
     @Autowired
     private QuestionMapper questionMapper;
 
-    private final String API_URL = "/api/v1/minigames/crosswordpuzzle/configurations";
+    private final String API_URL = "/configurations";
     private ObjectMapper objectMapper;
     private Configuration initialConfig;
     private ConfigurationDTO initialConfigDTO;
@@ -123,7 +120,7 @@ class CrosswordServiceApplicationTests {
         String content = result.getResponse().getContentAsString();
         ConfigurationDTO createdConfiguration = objectMapper.readValue(content, ConfigurationDTO.class);
         assertEquals(config1.getName(), createdConfiguration.getName());
-        assertEquals(config1.getName(), configurationRepository.findById(createdConfiguration.getId()).get().getName());
+        Assertions.assertEquals(config1.getName(), configurationRepository.findById(createdConfiguration.getId()).get().getName());
         configurationRepository.deleteById(createdConfiguration.getId());
     }
 
@@ -146,7 +143,7 @@ class CrosswordServiceApplicationTests {
         String content = result.getResponse().getContentAsString();
         ConfigurationDTO updatedConfiguration = objectMapper.readValue(content, ConfigurationDTO.class);
         assertEquals(config1.getName(), updatedConfiguration.getName());
-        assertEquals(config1.getName(), configurationRepository.findById(updatedConfiguration.getId()).get().getName());
+        Assertions.assertEquals(config1.getName(), configurationRepository.findById(updatedConfiguration.getId()).get().getName());
         configurationRepository.deleteById(updatedConfiguration.getId());
     }
 
@@ -276,7 +273,7 @@ class CrosswordServiceApplicationTests {
         String requestJson = ow.writeValueAsString(questions);
 
 
-        MvcResult result = mockMvc.perform(get("/api/v1/minigames/crosswordpuzzle/crosswordpuzzle/validateCrossword")
+        MvcResult result = mockMvc.perform(get("/crosswordpuzzle/validateCrossword")
                         .content(requestJson).contentType(MediaType.APPLICATION_JSON
                         ))
                 .andExpect(status().isOk())

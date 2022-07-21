@@ -1,8 +1,8 @@
-package com.crosswordservice.crosswordchecker;
+package de.unistuttgart.crosswordbackend.crosswordchecker;
 
-import com.crosswordservice.data.Crossword;
-import com.crosswordservice.data.Intersection;
-import com.crosswordservice.data.Question;
+import de.unistuttgart.crosswordbackend.data.Crossword;
+import de.unistuttgart.crosswordbackend.data.Intersection;
+import de.unistuttgart.crosswordbackend.data.Question;
 import lombok.NoArgsConstructor;
 
 import java.security.SecureRandom;
