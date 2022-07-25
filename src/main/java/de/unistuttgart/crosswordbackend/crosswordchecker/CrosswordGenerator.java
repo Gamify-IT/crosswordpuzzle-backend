@@ -57,7 +57,7 @@ public class CrosswordGenerator {
       .parallelStream()
       .map(Question::getAnswer)
       .map(String::toUpperCase)
-      .collect(Collectors.toCollection(ArrayList::new));
+      .collect(Collectors.toList());
     Crossword crossword = generateCrossword(answers);
     crossword.setQuestions(questions);
     crossword.setAnswer(answers);
@@ -206,9 +206,8 @@ public class CrosswordGenerator {
         }
       }
     }
-    intersections.forEach(currentIntersection -> {
-      intersections.removeIf(intersection -> checkIntersection(word, currentIntersection, crossword));
-    });
+    intersections.removeIf(intersection -> checkIntersection(word, intersection, crossword));
+
     return intersections;
   }
 
