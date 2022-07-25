@@ -38,8 +38,6 @@ class CrosswordServiceApplicationTests {
     private ConfigurationRepository configurationRepository;
     @Autowired
     private ConfigurationMapper configurationMapper;
-    @Autowired
-    private QuestionMapper questionMapper;
 
     private final String API_URL = "/configurations";
     private ObjectMapper objectMapper;
