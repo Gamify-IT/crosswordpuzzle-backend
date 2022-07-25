@@ -45,7 +45,7 @@ public class ConfigService {
     return configurationRepository
       .findById(id)
       .orElseThrow(() ->
-        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("There is no configuration with id %s.", id))
+        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("There is no configuration with ID %s.", id))
       );
   }
 
@@ -56,16 +56,15 @@ public class ConfigService {
    * @return the saved configuration as DTO
    */
   public ConfigurationDTO saveConfiguration(final ConfigurationDTO configurationDTO) {
-    final Configuration savedConfiguration = configurationRepository.save(
-      configurationMapper.configurationDTOToConfiguration(configurationDTO)
-    );
-    return configurationMapper.configurationToConfigurationDTO(savedConfiguration);
+    return configurationMapper.configurationToConfigurationDTO(configurationRepository.save(
+            configurationMapper.configurationDTOToConfiguration(configurationDTO)
+    ));
   }
 
   /**
    * Update a configuration
    *
-   * @throws ResponseStatusException when configuration with the id does not exist
+   * @throws ResponseStatusException (404) when configuration with the id does not exist
    * @param id the id of the configuration that should be updated
    * @param configurationDTO configuration that should be updated
    * @return the updated configuration as DTO
@@ -74,14 +73,13 @@ public class ConfigService {
     final Configuration configuration = getConfiguration(id);
     configuration.setQuestions(questionMapper.questionDTOsToQuestions(configurationDTO.getQuestions()));
     configuration.setName(configurationDTO.getName());
-    final Configuration updatedConfiguration = configurationRepository.save(configuration);
-    return configurationMapper.configurationToConfigurationDTO(updatedConfiguration);
+    return configurationMapper.configurationToConfigurationDTO(configurationRepository.save(configuration));
   }
 
   /**
    * Delete a configuration
    *
-   * @throws ResponseStatusException when configuration with the id does not exist
+   * @throws ResponseStatusException (404) when configuration with the id does not exist
    * @param id the id of the configuration that should be updated
    * @return the deleted configuration as DTO
    */
@@ -94,7 +92,7 @@ public class ConfigService {
   /**
    * Add a question to specific configuration
    *
-   * @throws ResponseStatusException when configuration with the id does not exist
+   * @throws ResponseStatusException (404) when configuration with the id does not exist
    * @param id the id of the configuration where a question should be added
    * @param questionDTO the question that should be added
    * @return the added question as DTO
@@ -110,20 +108,14 @@ public class ConfigService {
   /**
    * Delete a question from a specific configuration
    *
-   * @throws ResponseStatusException when configuration with the id or question with id does not exist
+   * @throws ResponseStatusException (404) when configuration with the id or question with id does not exist
    * @param id the id of the configuration where a question should be removed
    * @param questionId the id of the question that should be deleted
    * @return the deleted question as DTO
    */
   public QuestionDTO removeQuestionFromConfiguration(final UUID id, final UUID questionId) {
     final Configuration configuration = getConfiguration(id);
-    final Question question = getQuestionInConfiguration(questionId, configuration)
-      .orElseThrow(() ->
-        new ResponseStatusException(
-          HttpStatus.NOT_FOUND,
-          String.format("Question with ID %s does not exist in configuration %s.", questionId, configuration)
-        )
-      );
+    final Question question = getQuestionInConfiguration(questionId, configuration);
     configuration.removeQuestion(question);
     configurationRepository.save(configuration);
     questionRepository.delete(question);
@@ -133,7 +125,7 @@ public class ConfigService {
   /**
    * Update a question from a specific configuration
    *
-   * @throws ResponseStatusException when configuration with the id or question with id does not exist
+   * @throws ResponseStatusException (404) when configuration with the id or question with id does not exist
    * @param id the id of the configuration where a question should be updated
    * @param questionId the id of the question that should be updated
    * @param questionDTO the content of the question that should be updated
@@ -145,30 +137,30 @@ public class ConfigService {
     final QuestionDTO questionDTO
   ) {
     final Configuration configuration = getConfiguration(id);
-    if (getQuestionInConfiguration(questionId, configuration).isEmpty()) {
-      throw new ResponseStatusException(
-        HttpStatus.NOT_FOUND,
-        String.format("Question with ID %s does not exist in configuration %s.", questionId, configuration)
-      );
-    }
-    final Question question = questionMapper.questionDTOToQuestion(questionDTO);
-    question.setId(questionId);
-    final Question savedQuestion = questionRepository.save(question);
-    return questionMapper.questionToQuestionDTO(savedQuestion);
+    final Question question = getQuestionInConfiguration(questionId, configuration);
+    question.setQuestionText(questionDTO.getQuestionText());
+    question.setAnswer(questionDTO.getAnswer());
+    return questionMapper.questionToQuestionDTO(questionRepository.save(question));
   }
 
   /**
    *
-   * @throws ResponseStatusException when question with the id in the given configuration does not exist
+   * @throws ResponseStatusException (404) when question with the id in the given configuration does not exist
    * @param questionId id of searched question
    * @param configuration configuration in which the question is part of
    * @return an optional of the question
    */
-  private Optional<Question> getQuestionInConfiguration(final UUID questionId, final Configuration configuration) {
+  private Question getQuestionInConfiguration(final UUID questionId, final Configuration configuration) {
     return configuration
       .getQuestions()
       .parallelStream()
       .filter(filteredQuestion -> filteredQuestion.getId().equals(questionId))
-      .findAny();
+      .findAny()
+      .orElseThrow(() ->
+        new ResponseStatusException(
+          HttpStatus.NOT_FOUND,
+          String.format("Question with ID %s does not exist in configuration %s.", questionId, configuration)
+        )
+      );
   }
 }

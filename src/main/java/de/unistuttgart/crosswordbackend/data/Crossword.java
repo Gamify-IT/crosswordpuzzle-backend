@@ -2,15 +2,15 @@ package de.unistuttgart.crosswordbackend.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import lombok.Data;
 
-/**
- * creates a Crosswordpuzzle with the needed funtions  as a 2d String array
- */
+@Data
 public class Crossword {
 
-  private final ArrayList<ArrayList<String>> crosswordPuzzle = new ArrayList<>();
+  private final List<List<String>> crosswordPuzzle = new ArrayList<>();
   private static final String emptyTile = "empty";
-  private List<Question> questions = new ArrayList<>();
+  private Set<Question> questions;
 
   private List<String> answer = new ArrayList<>();
 
@@ -51,7 +51,7 @@ public class Crossword {
     crosswordPuzzle.add(newList);
   }
 
-  public List<ArrayList<String>> getCrosswordPuzzle() {
+  public List<List<String>> getCrosswordPuzzle() {
     return crosswordPuzzle;
   }
 
@@ -113,21 +113,5 @@ public class Crossword {
       return false;
     }
     return y < 0 && y >= getRows();
-  }
-
-  public List<Question> getQuestions() {
-    return questions;
-  }
-
-  public void setQuestions(List<Question> questions) {
-    this.questions = questions;
-  }
-
-  public List<String> getAnswer() {
-    return answer;
-  }
-
-  public void setAnswer(List<String> answer) {
-    this.answer = answer;
   }
 }

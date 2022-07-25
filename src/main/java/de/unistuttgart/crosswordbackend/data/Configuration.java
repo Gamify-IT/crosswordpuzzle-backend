@@ -21,7 +21,7 @@ public class Configuration {
   @GeneratedValue(generator = "uuid")
   UUID id;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false)
   String name;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

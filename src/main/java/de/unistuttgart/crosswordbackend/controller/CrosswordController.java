@@ -19,16 +19,12 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class CrosswordController {
 
-  private final String configNotfound = "Configuration not found";
-
   @Autowired
   QuestionMapper questionMapper;
 
-  @GetMapping("/validateCrossword")
+  @GetMapping("/validate-crossword")
   public boolean isValidCrosswordPuzzle(@RequestBody Set<QuestionDTO> questionDTOs) {
-    log.debug("ValidateCrossword");
-    CrosswordChecker crosswordChecker = new CrosswordChecker();
-    List<Question> questions = new ArrayList<>(questionMapper.questionDTOsToQuestions(questionDTOs));
-    return crosswordChecker.checkCrossword(questions);
+    log.debug("The user wants to validate if \"{}\" is a valid crossword.", questionDTOs);
+    return new CrosswordChecker().checkCrossword(questionMapper.questionDTOsToQuestions(questionDTOs));
   }
 }

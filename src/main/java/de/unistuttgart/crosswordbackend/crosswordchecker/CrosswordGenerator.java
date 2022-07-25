@@ -5,6 +5,7 @@ import de.unistuttgart.crosswordbackend.data.Intersection;
 import de.unistuttgart.crosswordbackend.data.Question;
 import java.security.SecureRandom;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -13,27 +14,27 @@ public class CrosswordGenerator {
   /**
    * Count of crosswords generated and compared by getScore() function
    */
-  private int interations = 10;
-  private int startRows = 10;
-  private int startColumns = 10;
+  private final int iterations = 10;
+  private final int startRows = 10;
+  private final int startColumns = 10;
 
   private final String empty = "empty";
 
-  private SecureRandom random = new SecureRandom();
+  private final SecureRandom random = new SecureRandom();
 
   /**
    * Count of tries of the algorithm to place a word.
    */
-  private int maxTries = 100;
+  private final int maxTries = 100;
 
   /**
    * Genereates a crossword with the given questions
    * @param questions Questions to create a crossword-puzzle with
    * @return a Crossword-puzzle
    */
-  public Crossword generateCrossword(List<Question> questions) {
+  public Crossword generateCrossword(Set<Question> questions) {
     Crossword crossword = createCrossword(questions);
-    for (int i = 0; i < interations; i++) {
+    for (int i = 0; i < iterations; i++) {
       Crossword currentCrossword = createCrossword(questions);
       int crosswordScore = getScore(crossword);
       int currentCrosswordScore = getScore(currentCrossword);
@@ -46,27 +47,30 @@ public class CrosswordGenerator {
   }
 
   /**
-   * Converts the Array from type question to an Array with the type
-   * String. The String Array only contains the answers.
-   * Then the simpleCrossword algorithm is called.
-   * @param questions Question Array who will be converted
-   * @return Crossword out of the given questions
+   * Creates a crossword with the given questions (and answers).
+   *
+   * @param questions the questions to include
+   * @return the generated crossword
    */
-  private Crossword createCrossword(List<Question> questions) {
-    ArrayList<String> answers = new ArrayList<>();
-    questions.forEach(question -> answers.add(question.getAnswer().toUpperCase()));
-    Crossword crossword = simpleCrossword(answers);
-    crossword.setQuestions((ArrayList<Question>) questions);
+  private Crossword createCrossword(Set<Question> questions) {
+    List<String> answers = questions
+      .parallelStream()
+      .map(Question::getAnswer)
+      .map(String::toUpperCase)
+      .collect(Collectors.toCollection(ArrayList::new));
+    Crossword crossword = generateCrossword(answers);
+    crossword.setQuestions(questions);
     crossword.setAnswer(answers);
     return crossword;
   }
 
   /**
    * Simple algorithm generate a crossword out of given answers.
-   * @param answers List of answers which will be placed in a crossword if possible.
-   * @return crossword with the given answers.
+   *
+   * @param answers list of answers which will be placed in a crossword if possible
+   * @return crossword with the given answers
    */
-  private Crossword simpleCrossword(ArrayList<String> answers) {
+  private Crossword generateCrossword(List<String> answers) {
     Crossword crossword = new Crossword(startColumns, startRows);
     int indexOfCurrentAnswer = 0;
     if (answers.size() > 1) {
@@ -93,12 +97,12 @@ public class CrosswordGenerator {
 
   /**
    * Tries to place a word on the given crossword.
-   * @param word word, which should be placed if possible.
-   * @param crossword crossword where the word should be placed.
-   * @return true if the word has been placed, otherwise false.
+   * @param word word which should be placed if possible
+   * @param crossword where the word should be placed
+   * @return whether the word has been placed
    */
   private boolean tryPlaceWord(String word, Crossword crossword) {
-    ArrayList<Intersection> intersections = getIntersections(word, crossword);
+    List<Intersection> intersections = getIntersections(word, crossword);
     while (!intersections.isEmpty()) {
       int indexOfCurrentIntersection = 0;
       if (intersections.size() > 1) {
@@ -106,11 +110,10 @@ public class CrosswordGenerator {
       }
       Intersection currentIntersection = intersections.get(indexOfCurrentIntersection);
       intersections.remove(indexOfCurrentIntersection);
-      if (tryPlaceHorizontal(currentIntersection, word, crossword)) {
-        return true;
-      }
-
-      if (tryPlaceVertical(currentIntersection, word, crossword)) {
+      if (
+        tryPlaceHorizontal(currentIntersection, word, crossword) ||
+        tryPlaceVertical(currentIntersection, word, crossword)
+      ) {
         return true;
       }
     }
@@ -119,13 +122,14 @@ public class CrosswordGenerator {
 
   /**
    * Tries to place a word vertical with the given intersection.
-   * @param intersection Intersection, on which the word should be placed if possible.
-   * @param word word, which should be placed
-   * @param crossword crossword where the world should be placed.
-   * @return true if the word has been placed, otherwise false.
+   * @param intersection intersection on which the word should be placed if possible
+   * @param word word which should be placed
+   * @param crossword crossword where the world should be placed
+   * @return whether the word has been placed
    */
   private boolean tryPlaceVertical(Intersection intersection, String word, Crossword crossword) {
     ArrayList<String> characters = new ArrayList<>(Arrays.asList(word.split("")));
+    //Check if word collides with a word placed on the crossword
     for (int i = 0; i < characters.size(); i++) {
       int currentX = intersection.getX();
       int currentY = intersection.getY() - intersection.getPositionInWord() + i;
@@ -137,6 +141,7 @@ public class CrosswordGenerator {
         return false;
       }
     }
+    //check if the position in front of the word is empty
     if (
       intersection.getY() - intersection.getPositionInWord() - 1 >= 0 &&
       !(
@@ -151,13 +156,14 @@ public class CrosswordGenerator {
 
   /**
    * Tries to place a word horizontal with the given intersection.
-   * @param intersection Intersection, on which the word should be placed if possible.
-   * @param word word, which should be placed
-   * @param crossword crossword where the world should be placed.
-   * @return true if the word has been placed, otherwise false.
+   * @param intersection intersection on which the word should be placed if possible
+   * @param word word which should be placed
+   * @param crossword where the world should be placed
+   * @return whether the word has been placed
    */
   private boolean tryPlaceHorizontal(Intersection intersection, String word, Crossword crossword) {
-    ArrayList<String> characters = new ArrayList<>(Arrays.asList(word.split("")));
+    List<String> characters = new ArrayList<>(Arrays.asList(word.split("")));
+    //Check if word collides with a word placed on the crossword
     for (int i = 0; i < characters.size(); i++) {
       int currentX = intersection.getX() - intersection.getPositionInWord() + i;
       int currentY = intersection.getY();
@@ -169,6 +175,7 @@ public class CrosswordGenerator {
         return false;
       }
     }
+    //check if the position in front of the word is empty
     if (
       intersection.getX() - intersection.getPositionInWord() - 1 >= 0 &&
       !(
@@ -183,12 +190,12 @@ public class CrosswordGenerator {
 
   /**
    * Calculates the intersections of the given word with the words on the crossword.
-   * @param word word, where the intersections will be calculated.
-   * @param crossword crossword, on which the intersections will be calculated.
-   * @return List of intersections of the given word on the given crossword-puzzle.
+   * @param word word where the intersections will be calculated
+   * @param crossword crossword on which the intersections will be calculated
+   * @return a list of intersections for the given word and crossword-puzzle.
    */
-  private ArrayList<Intersection> getIntersections(String word, Crossword crossword) {
-    ArrayList<Intersection> intersections = new ArrayList<>();
+  private List<Intersection> getIntersections(String word, Crossword crossword) {
+    List<Intersection> intersections = new ArrayList<>();
     for (int i = 0; i < word.length(); i++) {
       for (int x = 0; x < crossword.getColumns(); x++) {
         for (int y = 0; y < crossword.getRows(); y++) {
@@ -200,9 +207,7 @@ public class CrosswordGenerator {
       }
     }
     intersections.forEach(currentIntersection -> {
-      if (checkIntesection(word, currentIntersection, crossword)) {
-        intersections.remove(currentIntersection);
-      }
+      intersections.removeIf(intersection -> checkIntersection(word, currentIntersection, crossword));
     });
     return intersections;
   }
@@ -214,7 +219,8 @@ public class CrosswordGenerator {
    * @param crossword crossword which should be checked.
    * @return true if the intersection is possible.
    */
-  private boolean checkIntesection(String word, Intersection intersection, Crossword crossword) {
+  private boolean checkIntersection(String word, Intersection intersection, Crossword crossword) {
+    //Check intersection horizontal
     for (
       int i = Math.max(intersection.getX() - intersection.getPositionInWord(), 0);
       i < intersection.getX() + word.length() - intersection.getPositionInWord();
@@ -228,6 +234,7 @@ public class CrosswordGenerator {
         return false;
       }
     }
+    //Check intersection vertical
     for (
       int i = Math.max(intersection.getY() - intersection.getPositionInWord(), 0);
       i < intersection.getY() + word.length() - intersection.getPositionInWord();
@@ -245,9 +252,9 @@ public class CrosswordGenerator {
   }
 
   /**
-   * return 0
+   * calculates a score for a crossword based on the amount of words placed on the crossword
    * @param crossword crossword which score should be calculated.
-   * @return 0
+   * @return score of the crossword
    */
   private int getScore(Crossword crossword) {
     int score = 0;

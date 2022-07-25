@@ -121,11 +121,7 @@ class CrosswordServiceApplicationTests {
     String content = result.getResponse().getContentAsString();
     ConfigurationDTO createdConfiguration = objectMapper.readValue(content, ConfigurationDTO.class);
     assertEquals(config1.getName(), createdConfiguration.getName());
-    Assertions.assertEquals(
-      config1.getName(),
-      configurationRepository.findById(createdConfiguration.getId()).get().getName()
-    );
-    configurationRepository.deleteById(createdConfiguration.getId());
+    assertEquals(config1.getName(), configurationRepository.findById(createdConfiguration.getId()).get().getName());
   }
 
   @Test
@@ -151,7 +147,6 @@ class CrosswordServiceApplicationTests {
       config1.getName(),
       configurationRepository.findById(updatedConfiguration.getId()).get().getName()
     );
-    configurationRepository.deleteById(updatedConfiguration.getId());
   }
 
   @Test
@@ -267,14 +262,6 @@ class CrosswordServiceApplicationTests {
   }
 
   @Test
-  void testTestData() throws Exception {
-    MvcResult result = mockMvc.perform(post(API_URL + "/inputTestData")).andExpect(status().isOk()).andReturn();
-
-    String content = result.getResponse().getContentAsString();
-    List<ConfigurationDTO> allQuestions = Arrays.asList(objectMapper.readValue(content, ConfigurationDTO[].class));
-  }
-
-  @Test
   void testValidateCrossword() throws Exception {
     Question question1 = new Question("Which language extends Javascript with type safety?", "Typescript");
     Question question2 = new Question(
@@ -294,7 +281,7 @@ class CrosswordServiceApplicationTests {
     String requestJson = ow.writeValueAsString(questions);
 
     MvcResult result = mockMvc
-      .perform(get("/crosswordpuzzle/validateCrossword").content(requestJson).contentType(MediaType.APPLICATION_JSON))
+      .perform(get("/crosswordpuzzle/validate-crossword").content(requestJson).contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
       .andReturn();
 

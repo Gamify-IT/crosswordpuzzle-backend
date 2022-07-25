@@ -33,43 +33,6 @@ public class ConfigController {
   @Autowired
   ConfigService configService;
 
-  @PostMapping("/inputTestData")
-  public List<ConfigurationDTO> inputTestData() {
-    Set<Question> questions1 = new HashSet<>();
-    Set<Question> questions2 = new HashSet<>();
-
-    Question quest1 = new Question("Which language extends Javascript with type safety?", "Typescript");
-    Question quest2 = new Question(
-      "How is the system of rules called which defines well-formed expressions?",
-      "Syntax"
-    );
-    Question quest3 = new Question("Which loop allows to set the count of iterations in the head?", "for-loop");
-    Question quest4 = new Question("What is the abbreviation of the computing unit in a computer?", "CPU");
-    Question quest5 = new Question("Which Diagram is used to describe the structure of a system?", "class-diagram");
-    Question quest6 = new Question("Which Diagram is used to describe a sequence?", "sequence-diagram");
-    Question quest7 = new Question(
-      "Which Diagram is used to describe the components of a system?",
-      "component-diagram"
-    );
-    questions1.add(quest1);
-    questions1.add(quest2);
-    questions1.add(quest3);
-    questions1.add(quest4);
-    questions2.add(quest5);
-    questions2.add(quest6);
-    questions2.add(quest7);
-
-    Configuration config1 = new Configuration("test", questions1);
-    Configuration config2 = new Configuration("uml", questions2);
-    config1 = configurationRepository.save(config1);
-    config2 = configurationRepository.save(config2);
-
-    List<Configuration> configs = new ArrayList<>();
-    configs.add(config1);
-    configs.add(config2);
-    return configurationMapper.configurationsToConfigurationDTOs(configs);
-  }
-
   @GetMapping("")
   public List<ConfigurationDTO> getConfigurations() {
     log.debug("get all configurations");

@@ -3,18 +3,19 @@ package de.unistuttgart.crosswordbackend.crosswordchecker;
 import de.unistuttgart.crosswordbackend.data.Crossword;
 import de.unistuttgart.crosswordbackend.data.Question;
 import java.util.List;
+import java.util.Set;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class CrosswordChecker {
 
   /**
-   * creates a crossword with the given questions and return if every answer is placed
-   * on the crossword-puzzle
-   * @param questions questions with answers for a crossword-puzzle
-   * @return if all answers are placed on the crossword-puzzle return true else return false
+   * Checks if a crossword with the given questions can be created.
+   *
+   * @param questions the questions to include
+   * @return whether all answers are placed on the crossword-puzzle
    */
-  public boolean checkCrossword(List<Question> questions) {
+  public boolean checkCrossword(Set<Question> questions) {
     CrosswordGenerator crosswordGenerator = new CrosswordGenerator();
     Crossword crossword = crosswordGenerator.generateCrossword(questions);
     return crossword.getAnswer().isEmpty();
