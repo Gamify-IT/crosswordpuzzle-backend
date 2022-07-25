@@ -57,7 +57,7 @@ public class CrosswordGenerator {
       .parallelStream()
       .map(Question::getAnswer)
       .map(String::toUpperCase)
-      .collect(Collectors.toList());
+      .collect(Collectors.toCollection(ArrayList::new));
     Crossword crossword = generateCrossword(answers);
     crossword.setQuestions(questions);
     crossword.setAnswer(answers);
