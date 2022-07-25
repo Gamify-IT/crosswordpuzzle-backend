@@ -56,9 +56,9 @@ public class ConfigService {
    * @return the saved configuration as DTO
    */
   public ConfigurationDTO saveConfiguration(final ConfigurationDTO configurationDTO) {
-    return configurationMapper.configurationToConfigurationDTO(configurationRepository.save(
-            configurationMapper.configurationDTOToConfiguration(configurationDTO)
-    ));
+    return configurationMapper.configurationToConfigurationDTO(
+      configurationRepository.save(configurationMapper.configurationDTOToConfiguration(configurationDTO))
+    );
   }
 
   /**
