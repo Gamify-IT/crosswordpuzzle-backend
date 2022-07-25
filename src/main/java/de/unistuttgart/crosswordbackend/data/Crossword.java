@@ -18,7 +18,7 @@ public class Crossword {
     addColumnRight();
   }
 
-  public Crossword(int columns, int rows) {
+  public Crossword(final int columns, final int rows) {
     for (int i = 0; i < rows; i++) {
       addColumnRight();
     }
@@ -66,15 +66,15 @@ public class Crossword {
     return crosswordPuzzle.size();
   }
 
-  private void setTile(String character, int x, int y) {
+  private void setTile(final String character, final int x, final int y) {
     crosswordPuzzle.get(x).set(y, character);
   }
 
-  public String getTile(int x, int y) {
+  public String getTile(final int x, final int y) {
     return crosswordPuzzle.get(x).get(y);
   }
 
-  public void placeWordHorizontal(int x, int y, String word) {
+  public void placeWordHorizontal(int x, final int y, final String word) {
     while (x <= 0) {
       addColumnLeft();
       x++;
@@ -91,7 +91,7 @@ public class Crossword {
     }
   }
 
-  public void placeWordVertical(int x, int y, String word) {
+  public void placeWordVertical(final int x, int y, String word) {
     while (y <= 0) {
       addRowTop();
       y++;
@@ -108,7 +108,7 @@ public class Crossword {
     }
   }
 
-  public boolean checkInBounds(int x, int y) {
+  public boolean checkInBounds(final int x, final int y) {
     if (x < 0 || x >= getColumns()) {
       return false;
     }

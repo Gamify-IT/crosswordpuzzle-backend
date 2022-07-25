@@ -12,6 +12,4 @@ public interface QuestionMapper {
   Question questionDTOToQuestion(final QuestionDTO questionDTO);
 
   Set<Question> questionDTOsToQuestions(final Set<QuestionDTO> questionDTOs);
-
-  Set<QuestionDTO> questionsToQuestionDTOs(final Set<Question> questions);
 }

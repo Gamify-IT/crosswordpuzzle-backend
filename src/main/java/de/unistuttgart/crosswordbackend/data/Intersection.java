@@ -12,7 +12,7 @@ public class Intersection {
   private int y;
   private int positionInWord;
 
-  public Intersection(int x, int y, int positionInWord) {
+  public Intersection(final int x, final int y, final int positionInWord) {
     this.x = x;
     this.y = y;
     this.positionInWord = positionInWord;
