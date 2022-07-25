@@ -9,9 +9,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class CrosswordServiceConfiguration implements WebMvcConfigurer {
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        // allow CORS requests for all resources and HTTP methods from the frontend origin
-        registry.addMapping("/**").allowedMethods("OPTIONS", "HEAD", "GET", "PUT", "POST", "DELETE");
-    }
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    // allow CORS requests for all resources and HTTP methods from the frontend origin
+    registry.addMapping("/**").allowedMethods("OPTIONS", "HEAD", "GET", "PUT", "POST", "DELETE");
+  }
 }

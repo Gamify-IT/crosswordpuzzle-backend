@@ -1,14 +1,12 @@
 package de.unistuttgart.crosswordbackend.data;
 
+import java.util.Set;
+import java.util.UUID;
 import javax.persistence.*;
-
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * Configuration for a crosswordpuzzle with a name
@@ -18,28 +16,27 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Configuration {
-    @Id
-    @GeneratedValue(generator = "uuid")
-    UUID id;
-    @Column(
-            nullable = false,
-            unique = true
-    )
-    String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    Set<Question> questions;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  UUID id;
 
-    public Configuration(final String name, final Set<Question> questions){
-        this.name = name;
-        this.questions = questions;
-    }
+  @Column(nullable = false, unique = true)
+  String name;
 
-    public void addQuestion(final Question question) {
-        this.questions.add(question);
-    }
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  Set<Question> questions;
 
-    public void removeQuestion(final Question question) {
-        this.questions.remove(question);
-    }
+  public Configuration(final String name, final Set<Question> questions) {
+    this.name = name;
+    this.questions = questions;
+  }
+
+  public void addQuestion(final Question question) {
+    this.questions.add(question);
+  }
+
+  public void removeQuestion(final Question question) {
+    this.questions.remove(question);
+  }
 }
