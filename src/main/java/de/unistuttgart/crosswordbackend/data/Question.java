@@ -8,8 +8,6 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.util.UUID;
 
-import static javax.persistence.GenerationType.SEQUENCE;
-
 /**
  * Class to save a question with the id of the configuration, the question
  *  and the answer
