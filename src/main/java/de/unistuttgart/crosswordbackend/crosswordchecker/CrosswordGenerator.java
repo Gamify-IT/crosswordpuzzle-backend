@@ -14,18 +14,18 @@ public class CrosswordGenerator {
   /**
    * Count of crosswords generated and compared by getScore() function
    */
-  private final int iterations = 10;
-  private final int startRows = 10;
-  private final int startColumns = 10;
+  private static final int iterations = 10;
+  private static final int startRows = 10;
+  private static final int startColumns = 10;
 
-  private final String empty = "empty";
+  private static final String empty = "empty";
 
   private final SecureRandom random = new SecureRandom();
 
   /**
    * Count of tries of the algorithm to place a word.
    */
-  private final int maxTries = 100;
+  private static final int maxTries = 100;
 
   /**
    * Genereates a crossword with the given questions
