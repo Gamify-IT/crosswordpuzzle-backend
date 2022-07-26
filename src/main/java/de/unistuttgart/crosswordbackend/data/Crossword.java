@@ -9,7 +9,7 @@ import lombok.Data;
 public class Crossword {
 
   private final List<List<String>> crosswordPuzzle = new ArrayList<>();
-  private static final String EmptyTile = "empty";
+  private static final String EMPTY_TILE = "empty";
   private Set<Question> questions;
 
   private List<String> answer = new ArrayList<>();
@@ -28,17 +28,17 @@ public class Crossword {
   }
 
   public void addRowTop() {
-    crosswordPuzzle.forEach(list -> list.add(0, EmptyTile));
+    crosswordPuzzle.forEach(list -> list.add(0, EMPTY_TILE));
   }
 
   public void addRowBottom() {
-    crosswordPuzzle.forEach(list -> list.add(EmptyTile));
+    crosswordPuzzle.forEach(list -> list.add(EMPTY_TILE));
   }
 
   public void addColumnLeft() {
     ArrayList<String> newList = new ArrayList<>();
     for (int i = 0; i < getRows(); i++) {
-      newList.add(EmptyTile);
+      newList.add(EMPTY_TILE);
     }
     crosswordPuzzle.add(0, newList);
   }
@@ -46,7 +46,7 @@ public class Crossword {
   public void addColumnRight() {
     ArrayList<String> newList = new ArrayList<>();
     for (int i = 0; i < getRows(); i++) {
-      newList.add(EmptyTile);
+      newList.add(EMPTY_TILE);
     }
     crosswordPuzzle.add(newList);
   }

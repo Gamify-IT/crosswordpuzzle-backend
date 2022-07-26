@@ -18,14 +18,14 @@ public class CrosswordGenerator {
   private static final int startRows = 10;
   private static final int startColumns = 10;
 
-  private static final String empty = "empty";
+  private static final String EMPTY = "empty";
 
   private final SecureRandom random = new SecureRandom();
 
   /**
    * Count of tries of the algorithm to place a word.
    */
-  private static final int maxTries = 100;
+  private static final int MAX_TRIES = 100;
 
   /**
    * Genereates a crossword with the given questions
@@ -79,7 +79,7 @@ public class CrosswordGenerator {
     crossword.placeWordHorizontal(0, 0, answers.get(indexOfCurrentAnswer));
     answers.remove(indexOfCurrentAnswer);
     int tries = 0;
-    while (!answers.isEmpty() && tries < maxTries) {
+    while (!answers.isEmpty() && tries < MAX_TRIES) {
       indexOfCurrentAnswer = 0;
       if (answers.size() > 1) {
         indexOfCurrentAnswer = randomNextInt(0, answers.size() - 1);
@@ -136,7 +136,7 @@ public class CrosswordGenerator {
       if (
         crossword.checkInBounds(currentX, currentY) &&
         !(characters.get(i).equals(crossword.getTile(currentX, currentY))) &&
-        !(crossword.getTile(currentX, currentY).equals(empty))
+        !(crossword.getTile(currentX, currentY).equals(EMPTY))
       ) {
         return false;
       }
@@ -145,7 +145,7 @@ public class CrosswordGenerator {
     if (
       intersection.getY() - intersection.getPositionInWord() - 1 >= 0 &&
       !(
-        crossword.getTile(intersection.getX(), intersection.getY() - intersection.getPositionInWord() - 1).equals(empty)
+        crossword.getTile(intersection.getX(), intersection.getY() - intersection.getPositionInWord() - 1).equals(EMPTY)
       )
     ) {
       return false;
@@ -170,7 +170,7 @@ public class CrosswordGenerator {
       if (
         crossword.checkInBounds(currentX, currentY) &&
         !(characters.get(i).equals(crossword.getTile(currentX, currentY))) &&
-        !(crossword.getTile(currentX, currentY).equals(empty))
+        !(crossword.getTile(currentX, currentY).equals(EMPTY))
       ) {
         return false;
       }
@@ -179,7 +179,7 @@ public class CrosswordGenerator {
     if (
       intersection.getX() - intersection.getPositionInWord() - 1 >= 0 &&
       !(
-        crossword.getTile(intersection.getX() - intersection.getPositionInWord() - 1, intersection.getY()).equals(empty)
+        crossword.getTile(intersection.getX() - intersection.getPositionInWord() - 1, intersection.getY()).equals(EMPTY)
       )
     ) {
       return false;
