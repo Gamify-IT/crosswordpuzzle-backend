@@ -60,13 +60,13 @@ class CrosswordServiceApplicationTests {
   }
 
   @AfterEach
-  public void deleteTestData() {
+  void deleteTestData() {
     configurationRepository.deleteAll();
     questionRepository.deleteAll();
   }
 
   @Test
-  public void getConfigurations() throws Exception {
+  void getConfigurations() throws Exception {
     final MvcResult result = mockMvc
       .perform(get(API_URL).contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -82,7 +82,7 @@ class CrosswordServiceApplicationTests {
   }
 
   @Test
-  public void getSpecificConfigurations() throws Exception {
+  void getSpecificConfigurations() throws Exception {
     final MvcResult result = mockMvc
       .perform(get(API_URL + "/" + initialConfigDTO.getId()).contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
