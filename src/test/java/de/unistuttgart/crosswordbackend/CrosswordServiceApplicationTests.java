@@ -98,7 +98,7 @@ class CrosswordServiceApplicationTests {
   }
 
   @Test
-  public void getSpecificConfiguration_DoesNotExist_ThrowsNotFound() throws Exception {
+  void getSpecificConfiguration_DoesNotExist_ThrowsNotFound() throws Exception {
     mockMvc
       .perform(get(API_URL + "/" + UUID.randomUUID()).contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isNotFound());
