@@ -14,9 +14,9 @@ public class CrosswordGenerator {
   /**
    * Count of crosswords generated and compared by getScore() function
    */
-  private static final int iterations = 10;
-  private static final int startRows = 10;
-  private static final int startColumns = 10;
+  private static final int ITERATIONS = 10;
+  private static final int START_ROWS = 10;
+  private static final int START_COLUMNS = 10;
 
   private static final String EMPTY = "empty";
 
@@ -34,7 +34,7 @@ public class CrosswordGenerator {
    */
   public Crossword generateCrossword(Set<Question> questions) {
     Crossword crossword = createCrossword(questions);
-    for (int i = 0; i < iterations; i++) {
+    for (int i = 0; i < ITERATIONS; i++) {
       Crossword currentCrossword = createCrossword(questions);
       int crosswordScore = getScore(crossword);
       int currentCrosswordScore = getScore(currentCrossword);
@@ -71,7 +71,7 @@ public class CrosswordGenerator {
    * @return crossword with the given answers
    */
   private Crossword generateCrossword(List<String> answers) {
-    Crossword crossword = new Crossword(startColumns, startRows);
+    Crossword crossword = new Crossword(START_COLUMNS, START_ROWS);
     int indexOfCurrentAnswer = 0;
     if (answers.size() > 1) {
       indexOfCurrentAnswer = randomNextInt(0, answers.size() - 1);
