@@ -20,9 +20,9 @@ First you have to change the spring.datasource.username and the spring.datasourc
 mvn install
 ```
 in the folder of the project.
-Go to the target folder and run 
+Then you can run it with
 ```sh
-java -jar crossword-service-0.0.1-SNAPSHOT.jar
+java -jar target/crossword-backend-0.0.1-SNAPSHOT.jar
 ```
 
 #### Docker-compose
