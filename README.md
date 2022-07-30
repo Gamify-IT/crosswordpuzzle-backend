@@ -25,15 +25,20 @@ Go to the target folder and run
 java -jar crossword-service-0.0.1-SNAPSHOT.jar
 ```
 
-### With Docker
+#### Docker-compose
+
+Start all dependencies with our docker-compose files.
+Check the [manual for docker-compose](https://github.com/Gamify-IT/docs/blob/main/dev-manuals/docker-compose/docker-compose.md).
+
+### As a single Docker container
 
 Build the Docker container with
 ```sh
 docker build  -t crosswordpuzzle-backend-dev .
 ```
-And run it at port 8000 with 
+And run it at port 8080 with 
 ```
-docker run -d -p 8000:80 -e POSTGRES_URL="postgresql://host.docker.internal:5432/postgres" -e POSTGRES_USER="postgres" -e POSTGRES_PASSWORD="postgres" --name crosswordpuzzle-backend-dev crosswordpuzzle-backend-dev
+docker run -d -p 8080:80 -e POSTGRES_URL="postgresql://host.docker.internal:5432/postgres" -e POSTGRES_USER="postgres" -e POSTGRES_PASSWORD="postgres" --name crosswordpuzzle-backend-dev crosswordpuzzle-backend-dev
 ```
 
 To monitor, stop and remove the container you can use the following commands:
