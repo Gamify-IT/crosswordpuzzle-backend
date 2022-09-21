@@ -67,7 +67,7 @@ services:
       KC_HTTP_PORT: 80
 
   overworld-backend:
-    container_name:   overworld-backend
+    container_name: overworld-backend
     image: ghcr.io/gamify-it/overworld-backend:main
     restart: always
     pull_policy: always
@@ -96,7 +96,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_URL=postgresql://crosswordpuzzle-db:5432/postgres
-      - OVERWORLD_URL=http://chickenshock-backend/api/v1
+      - OVERWORLD_URL=http://overworld-backend/api/v1
       - KEYCLOAK_ISSUER=http://localhost/keycloak/realms/Gamify-IT
       - KEYCLOAK_URL=http://keycloak/keycloak/realms/Gamify-IT
 
@@ -120,7 +120,7 @@ services:
 
   crosswordpuzzle:
     container_name: crosswordpuzzle
-    image: ghcr.io/gamify-it/crosswordpuzzle:main
+    image: ghcr.io/gamify-it/crosswordpuzzle:feature-frontend-to-backend-communication
     restart: always
     pull_policy: always
     expose:

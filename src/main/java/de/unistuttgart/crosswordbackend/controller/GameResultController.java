@@ -13,22 +13,22 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class GameResultController {
 
-    @Autowired
-    private GameResultService gameResultService;
+  @Autowired
+  private GameResultService gameResultService;
 
-    @Autowired
-    private JWTValidatorService jwtValidatorService;
+  @Autowired
+  private JWTValidatorService jwtValidatorService;
 
-    @PostMapping("")
-    @ResponseStatus(HttpStatus.CREATED)
-    public GameResultDTO saveGameResult(
-            @CookieValue("access_token") final String accessToken,
-            @RequestBody final GameResultDTO gameResultDTO
-    ) {
-        jwtValidatorService.validateTokenOrThrow(accessToken);
-        final String userId = jwtValidatorService.extractUserId(accessToken);
-        log.info("save game result for userId {}: {}", userId, gameResultDTO);
-        gameResultService.submitGameResult(gameResultDTO, userId, accessToken);
-        return gameResultDTO;
-    }
+  @PostMapping("")
+  @ResponseStatus(HttpStatus.CREATED)
+  public GameResultDTO saveGameResult(
+    @CookieValue("access_token") final String accessToken,
+    @RequestBody final GameResultDTO gameResultDTO
+  ) {
+    jwtValidatorService.validateTokenOrThrow(accessToken);
+    final String userId = jwtValidatorService.extractUserId(accessToken);
+    log.info("save game result for userId {}: {}", userId, gameResultDTO);
+    gameResultService.submitGameResult(gameResultDTO, userId, accessToken);
+    return gameResultDTO;
+  }
 }
