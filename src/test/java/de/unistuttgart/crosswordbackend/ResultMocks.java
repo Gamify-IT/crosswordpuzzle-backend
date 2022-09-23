@@ -20,12 +20,6 @@ public class ResultMocks {
             .aResponse()
             .withStatus(HttpStatus.OK.value())
             .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-            .withBody(
-              copyToString(
-                ResultMocks.class.getClassLoader().getResourceAsStream("payload/get-results-response.json"),
-                defaultCharset()
-              )
-            )
         )
     );
   }

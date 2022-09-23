@@ -13,9 +13,9 @@ public interface ResultClient {
   /**
    * Submits the resultDTO to the Overworld-Backend
    *
-   * @param resultDTO
+   * @param resultDTO resultDTO which is sent to the overworld backend
    * @param accessToken access token for the path validation
    */
   @PostMapping("/submit-game-pass")
-  void submit(@CookieValue("access_token") final String accessToken, OverworldResultDTO resultDTO);
+  void submit(@CookieValue("access_token") final String accessToken, final OverworldResultDTO resultDTO);
 }

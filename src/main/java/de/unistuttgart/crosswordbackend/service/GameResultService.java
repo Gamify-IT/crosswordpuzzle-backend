@@ -28,13 +28,15 @@ public class GameResultService {
    * @param accessToken accessToken of the user
    * @throws IllegalArgumentException if at least one of the arguments is null
    */
-  public void submitGameResult(GameResultDTO gameResult, String userId, String accessToken) {
+  public void submitGameResult(final GameResultDTO gameResult, final String userId, final String accessToken) {
     if (gameResult == null || userId == null || accessToken == null) {
       throw new IllegalArgumentException("gameResultDTO or userId is null");
     }
-    int score = 100 * gameResult.getCorrectTiles() / gameResult.getNumberOfTiles();
-    OverworldResultDTO overworldResultDTO = new OverworldResultDTO(
-      "CROSSWORDPUZZLE",
+    if (gameResult.getNumberOfTiles() < gameResult.getCorrectTiles()) {
+      throw new IllegalArgumentException("number of correct tiles is bigger than the number of tiles");
+    }
+    final int score = 100 * gameResult.getCorrectTiles() / gameResult.getNumberOfTiles();
+    final OverworldResultDTO overworldResultDTO = new OverworldResultDTO(
       gameResult.getConfiguration(),
       score,
       userId
@@ -47,7 +49,7 @@ public class GameResultService {
       log.warn(warning, badGateway);
       throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, warning);
     } catch (final FeignException.NotFound notFound) {
-      String warning = String.format("The result could not be saved. Unknown User '%s'.", userId);
+      final String warning = String.format("The result could not be saved. Unknown User '%s'.", userId);
       log.warn(warning, notFound);
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, warning);
     }
