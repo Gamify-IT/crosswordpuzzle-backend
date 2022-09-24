@@ -36,16 +36,12 @@ public class GameResultService {
       throw new IllegalArgumentException("number of correct tiles is bigger than the number of tiles");
     }
     final int score = 100 * gameResult.getCorrectTiles() / gameResult.getNumberOfTiles();
-    final OverworldResultDTO overworldResultDTO = new OverworldResultDTO(
-      gameResult.getConfiguration(),
-      score,
-      userId
-    );
+    final OverworldResultDTO overworldResultDTO = new OverworldResultDTO(gameResult.getConfiguration(), score, userId);
     try {
       resultClient.submit(accessToken, overworldResultDTO);
     } catch (final FeignException.BadGateway badGateway) {
       final String warning =
-              "The Overworld backend is currently not available. The result was NOT saved. Please try again later.";
+        "The Overworld backend is currently not available. The result was NOT saved. Please try again later.";
       log.warn(warning, badGateway);
       throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, warning);
     } catch (final FeignException.NotFound notFound) {

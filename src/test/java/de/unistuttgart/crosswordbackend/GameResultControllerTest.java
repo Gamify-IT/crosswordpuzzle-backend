@@ -32,18 +32,34 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ActiveProfiles("test")
-@EnableConfigurationProperties
-@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { WireMockConfig.class })
+@Testcontainers
 public class GameResultControllerTest {
+
+  @Container
+  public static PostgreSQLContainer postgresDB = new PostgreSQLContainer("postgres:14-alpine")
+          .withDatabaseName("postgres")
+          .withUsername("postgres")
+          .withPassword("postgres");
+
+  @DynamicPropertySource
+  public static void properties(final DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", postgresDB::getJdbcUrl);
+    registry.add("spring.datasource.username", postgresDB::getUsername);
+    registry.add("spring.datasource.password", postgresDB::getPassword);
+    registry.add("overworld.url", () -> "http://localhost:9561");
+  }
 
   private final String API_URL = "/results";
 
@@ -63,6 +79,8 @@ public class GameResultControllerTest {
 
   @Autowired
   private WireMockServer mockResultsService;
+
+
 
   private ObjectMapper objectMapper;
   private Configuration initialConfig;

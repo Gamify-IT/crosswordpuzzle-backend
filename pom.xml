@@ -20,12 +20,32 @@
         <plugin.prettier.goal>write</plugin.prettier.goal>
         <org.springdoc.version>1.6.9</org.springdoc.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <testcontainer.version>1.17.3</testcontainer.version>
+        <org.springframework.version>2.7.4</org.springframework.version>
     </properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+            <version>${org.springframework.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>${testcontainer.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainer.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testcontainer.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -49,7 +69,8 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
+            <version>42.5.0</version>
+            <scope>runtime</scope>
 		</dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
