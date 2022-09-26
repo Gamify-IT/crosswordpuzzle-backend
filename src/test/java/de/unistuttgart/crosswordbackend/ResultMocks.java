@@ -1,13 +1,17 @@
 package de.unistuttgart.crosswordbackend;
 
+import static java.nio.charset.Charset.defaultCharset;
+import static org.springframework.util.StreamUtils.copyToString;
+
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import java.io.IOException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 public class ResultMocks {
 
-  public static void setupMockBooksResponse(final WireMockServer mockService) {
+  public static void setupMockBooksResponse(final WireMockServer mockService) throws IOException {
     mockService.stubFor(
       WireMock
         .post(WireMock.urlEqualTo("/internal/submit-game-pass"))
