@@ -36,7 +36,7 @@ public class Crossword {
   }
 
   public void addColumnLeft() {
-    ArrayList<String> newList = new ArrayList<>();
+    final ArrayList<String> newList = new ArrayList<>();
     for (int i = 0; i < getRows(); i++) {
       newList.add(EMPTY_TILE);
     }
@@ -44,7 +44,7 @@ public class Crossword {
   }
 
   public void addColumnRight() {
-    ArrayList<String> newList = new ArrayList<>();
+    final ArrayList<String> newList = new ArrayList<>();
     for (int i = 0; i < getRows(); i++) {
       newList.add(EMPTY_TILE);
     }
@@ -91,7 +91,7 @@ public class Crossword {
     }
   }
 
-  public void placeWordVertical(final int x, int y, String word) {
+  public void placeWordVertical(final int x, int y, final String word) {
     while (y <= 0) {
       addRowTop();
       y++;

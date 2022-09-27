@@ -49,9 +49,9 @@ public class GameResultControllerTest {
 
   @Container
   public static PostgreSQLContainer postgresDB = new PostgreSQLContainer("postgres:14-alpine")
-          .withDatabaseName("postgres")
-          .withUsername("postgres")
-          .withPassword("postgres");
+    .withDatabaseName("postgres")
+    .withUsername("postgres")
+    .withPassword("postgres");
 
   @DynamicPropertySource
   public static void properties(final DynamicPropertyRegistry registry) {
@@ -79,8 +79,6 @@ public class GameResultControllerTest {
 
   @Autowired
   private WireMockServer mockResultsService;
-
-
 
   private ObjectMapper objectMapper;
   private Configuration initialConfig;

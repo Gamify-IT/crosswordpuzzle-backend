@@ -8,7 +8,6 @@ import de.unistuttgart.crosswordbackend.mapper.ConfigurationMapper;
 import de.unistuttgart.crosswordbackend.mapper.QuestionMapper;
 import de.unistuttgart.crosswordbackend.repositories.ConfigurationRepository;
 import de.unistuttgart.crosswordbackend.repositories.QuestionRepository;
-import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;

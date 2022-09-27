@@ -26,7 +26,7 @@ public class CrosswordController {
 
   @GetMapping("/validate-crossword")
   public boolean isValidCrosswordPuzzle(
-    @RequestBody Set<QuestionDTO> questionDTOs,
+    @RequestBody final Set<QuestionDTO> questionDTOs,
     @CookieValue("access_token") final String accessToken
   ) {
     jwtValidatorService.validateTokenOrThrow(accessToken);
