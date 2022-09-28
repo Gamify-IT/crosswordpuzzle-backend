@@ -6,6 +6,8 @@ import de.unistuttgart.crosswordbackend.mapper.QuestionMapper;
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
 import java.util.List;
 import java.util.Set;
+
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ public class CrosswordController {
   @Autowired
   QuestionMapper questionMapper;
 
+  @Operation(summary="validates if a crossword-puzzle can be created out of the given questions")
   @GetMapping("/validate-crossword")
   public boolean isValidCrosswordPuzzle(
     @RequestBody final Set<QuestionDTO> questionDTOs,
