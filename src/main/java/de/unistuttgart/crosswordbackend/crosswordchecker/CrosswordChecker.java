@@ -15,9 +15,9 @@ public class CrosswordChecker {
    * @param questions the questions to include
    * @return whether all answers are placed on the crossword-puzzle
    */
-  public boolean checkCrossword(Set<Question> questions) {
-    CrosswordGenerator crosswordGenerator = new CrosswordGenerator();
-    Crossword crossword = crosswordGenerator.generateCrossword(questions);
+  public boolean checkCrossword(final Set<Question> questions) {
+    final CrosswordGenerator crosswordGenerator = new CrosswordGenerator();
+    final Crossword crossword = crosswordGenerator.generateCrossword(questions);
     return crossword.getAnswer().isEmpty();
   }
 }

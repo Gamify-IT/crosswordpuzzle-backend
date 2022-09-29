@@ -3,6 +3,7 @@ package de.unistuttgart.crosswordbackend;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,28 +23,39 @@ import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ActiveProfiles("test")
-@EnableConfigurationProperties
-@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { WireMockConfig.class })
+@Testcontainers
 public class GameResultControllerTest {
+
+  @Container
+  public static PostgreSQLContainer postgresDB = new PostgreSQLContainer("postgres:14-alpine")
+    .withDatabaseName("postgres")
+    .withUsername("postgres")
+    .withPassword("postgres");
+
+  @DynamicPropertySource
+  public static void properties(final DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", postgresDB::getJdbcUrl);
+    registry.add("spring.datasource.username", postgresDB::getUsername);
+    registry.add("spring.datasource.password", postgresDB::getPassword);
+    registry.add("overworld.url", () -> "http://localhost:9561");
+  }
 
   private final String API_URL = "/results";
 
@@ -53,7 +65,7 @@ public class GameResultControllerTest {
   Cookie cookie = new Cookie("access_token", "testToken");
 
   @Autowired
-  private MockMvc mvc;
+  private MockMvc mockMvc;
 
   @Autowired
   private ConfigurationMapper configurationMapper;
@@ -112,7 +124,7 @@ public class GameResultControllerTest {
   void saveGameResult() throws Exception {
     final GameResultDTO gameResultDTO = new GameResultDTO(24, 24, UUID.randomUUID());
     final String bodyValue = objectMapper.writeValueAsString(gameResultDTO);
-    final MvcResult result = mvc
+    final MvcResult result = mockMvc
       .perform(post(API_URL).cookie(cookie).content(bodyValue).contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isCreated())
       .andReturn();
@@ -123,5 +135,10 @@ public class GameResultControllerTest {
     );
 
     assertEquals(gameResultDTO, createdGameResultDTO);
+  }
+
+  @Test
+  void testWithoutCookie_ThrowsBadRequest() throws Exception {
+    mockMvc.perform(post(API_URL).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
   }
 }
