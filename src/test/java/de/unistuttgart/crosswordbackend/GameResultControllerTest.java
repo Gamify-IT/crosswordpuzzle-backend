@@ -3,6 +3,7 @@ package de.unistuttgart.crosswordbackend;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,19 +23,14 @@ import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -69,7 +65,7 @@ public class GameResultControllerTest {
   Cookie cookie = new Cookie("access_token", "testToken");
 
   @Autowired
-  private MockMvc mvc;
+  private MockMvc mockMvc;
 
   @Autowired
   private ConfigurationMapper configurationMapper;
@@ -128,7 +124,7 @@ public class GameResultControllerTest {
   void saveGameResult() throws Exception {
     final GameResultDTO gameResultDTO = new GameResultDTO(24, 24, UUID.randomUUID());
     final String bodyValue = objectMapper.writeValueAsString(gameResultDTO);
-    final MvcResult result = mvc
+    final MvcResult result = mockMvc
       .perform(post(API_URL).cookie(cookie).content(bodyValue).contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isCreated())
       .andReturn();
@@ -139,5 +135,10 @@ public class GameResultControllerTest {
     );
 
     assertEquals(gameResultDTO, createdGameResultDTO);
+  }
+
+  @Test
+  void testWithoutCookie_ThrowsBadRequest() throws Exception {
+    mockMvc.perform(post(API_URL).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
   }
 }

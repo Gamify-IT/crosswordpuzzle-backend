@@ -291,4 +291,34 @@ class ConfigControllerTest {
       .perform(delete(API_URL + "/" + initialConfigDTO.getId() + "/questions/" + UUID.randomUUID()).cookie(cookie))
       .andExpect(status().isNotFound());
   }
+
+  @Test
+  void testWithoutCookie_ThrowsBadRequest() throws Exception {
+    mockMvc.perform(get(API_URL).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    mockMvc
+      .perform(get(API_URL + "/" + initialConfig.getId()).contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest());
+    mockMvc.perform(post(API_URL).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    mockMvc
+      .perform(post(API_URL + "/" + initialConfig.getId() + "/questions/").contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest());
+    mockMvc
+      .perform(put(API_URL + "/" + initialConfigDTO.getId()).contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest());
+    mockMvc
+      .perform(delete(API_URL + "/" + initialConfig.getId()).contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest());
+    mockMvc
+      .perform(
+        put(
+          API_URL +
+          "/" +
+          initialConfig.getId() +
+          "/questions/" +
+          initialConfig.getQuestions().stream().findFirst().get().getId()
+        )
+          .contentType(MediaType.APPLICATION_JSON)
+      )
+      .andExpect(status().isBadRequest());
+  }
 }

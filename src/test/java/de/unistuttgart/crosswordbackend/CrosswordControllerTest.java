@@ -2,7 +2,7 @@ package de.unistuttgart.crosswordbackend;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,5 +96,12 @@ public class CrosswordControllerTest {
 
     final String content = result.getResponse().getContentAsString();
     assertTrue(objectMapper.readValue(content, Boolean.class));
+  }
+
+  @Test
+  void testWithoutCookie_ThrowsBadRequest() throws Exception {
+    mockMvc
+      .perform(get("/crosswordpuzzle/validate-crossword").contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isBadRequest());
   }
 }
