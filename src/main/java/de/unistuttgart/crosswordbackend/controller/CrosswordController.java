@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import static de.unistuttgart.crosswordbackend.data.Roles.LECTURER_ROLE;
+
 /**
  * Rest Controller for the crossword-puzzle backend
  */
@@ -32,7 +34,7 @@ public class CrosswordController {
     @CookieValue("access_token") final String accessToken
   ) {
     jwtValidatorService.validateTokenOrThrow(accessToken);
-    jwtValidatorService.hasRolesOrThrow(accessToken, List.of("lecturer"));
+    jwtValidatorService.hasRolesOrThrow(accessToken, LECTURER_ROLE);
     log.debug("The user wants to validate if \"{}\" is a valid crossword.", questionDTOs);
     return new CrosswordChecker().checkCrossword(questionMapper.questionDTOsToQuestions(questionDTOs));
   }

@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import static de.unistuttgart.crosswordbackend.data.Roles.LECTURER_ROLE;
+
 @RestController
 @RequestMapping("/configurations")
 @Slf4j
@@ -57,7 +59,7 @@ public class ConfigController {
     @CookieValue("access_token") final String accessToken
   ) {
     jwtValidatorService.validateTokenOrThrow(accessToken);
-    jwtValidatorService.hasRolesOrThrow(accessToken, List.of("lecturer"));
+    jwtValidatorService.hasRolesOrThrow(accessToken, LECTURER_ROLE);
     log.debug("create configuration {}", configurationDTO);
     return configService.saveConfiguration(configurationDTO);
   }
@@ -69,7 +71,7 @@ public class ConfigController {
     @CookieValue("access_token") final String accessToken
   ) {
     jwtValidatorService.validateTokenOrThrow(accessToken);
-    jwtValidatorService.hasRolesOrThrow(accessToken, List.of("lecturer"));
+    jwtValidatorService.hasRolesOrThrow(accessToken, LECTURER_ROLE);
     log.debug("update configuration {} with {}", id, configurationDTO);
     return configService.updateConfiguration(id, configurationDTO);
   }
@@ -80,7 +82,7 @@ public class ConfigController {
     @CookieValue("access_token") final String accessToken
   ) {
     jwtValidatorService.validateTokenOrThrow(accessToken);
-    jwtValidatorService.hasRolesOrThrow(accessToken, List.of("lecturer"));
+    jwtValidatorService.hasRolesOrThrow(accessToken, LECTURER_ROLE);
     log.debug("delete configuration {}", id);
     return configService.deleteConfiguration(id);
   }
@@ -93,7 +95,7 @@ public class ConfigController {
     @CookieValue("access_token") final String accessToken
   ) {
     jwtValidatorService.validateTokenOrThrow(accessToken);
-    jwtValidatorService.hasRolesOrThrow(accessToken, List.of("lecturer"));
+    jwtValidatorService.hasRolesOrThrow(accessToken, LECTURER_ROLE);
     log.debug("add question {} to configuration {}", questionDTO, id);
     return configService.addQuestionToConfiguration(id, questionDTO);
   }
@@ -105,7 +107,7 @@ public class ConfigController {
     @CookieValue("access_token") final String accessToken
   ) {
     jwtValidatorService.validateTokenOrThrow(accessToken);
-    jwtValidatorService.hasRolesOrThrow(accessToken, List.of("lecturer"));
+    jwtValidatorService.hasRolesOrThrow(accessToken, LECTURER_ROLE);
     log.debug("remove question {} from configuration {}", questionId, id);
     return configService.removeQuestionFromConfiguration(id, questionId);
   }
@@ -118,7 +120,7 @@ public class ConfigController {
     @CookieValue("access_token") final String accessToken
   ) {
     jwtValidatorService.validateTokenOrThrow(accessToken);
-    jwtValidatorService.hasRolesOrThrow(accessToken, List.of("lecturer"));
+    jwtValidatorService.hasRolesOrThrow(accessToken, LECTURER_ROLE);
     log.debug("update question {} with {} for configuration {}", questionId, questionDTO, id);
     return configService.updateQuestionFromConfiguration(id, questionId, questionDTO);
   }
