@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GameResultDTO {
 
-  int correctTiles;
-  int numberOfTiles;
-  UUID configuration;
+    int correctTiles;
+    int numberOfTiles;
+    UUID configuration;
 }

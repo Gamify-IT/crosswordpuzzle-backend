@@ -12,7 +12,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class CrosswordServiceApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(CrosswordServiceApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(CrosswordServiceApplication.class, args);
+    }
 }

@@ -17,12 +17,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionDTO {
 
-  UUID id;
-  String questionText;
-  String answer;
+    UUID id;
+    String questionText;
+    String answer;
 
-  public QuestionDTO(final String questionText, final String answer) {
-    this.questionText = questionText;
-    this.answer = answer;
-  }
+    public QuestionDTO(final String questionText, final String answer) {
+        this.questionText = questionText;
+        this.answer = answer;
+    }
 }

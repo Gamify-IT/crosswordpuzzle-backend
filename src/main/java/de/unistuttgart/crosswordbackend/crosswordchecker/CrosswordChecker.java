@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CrosswordChecker {
 
-  /**
-   * Checks if a crossword with the given questions can be created.
-   *
-   * @param questions the questions to include
-   * @return whether all answers are placed on the crossword-puzzle
-   */
-  public boolean checkCrossword(final Set<Question> questions) {
-    final CrosswordGenerator crosswordGenerator = new CrosswordGenerator();
-    final Crossword crossword = crosswordGenerator.generateCrossword(questions);
-    return crossword.getAnswer().isEmpty();
-  }
+    /**
+     * Checks if a crossword with the given questions can be created.
+     *
+     * @param questions the questions to include
+     * @return whether all answers are placed on the crossword-puzzle
+     */
+    public boolean checkCrossword(final Set<Question> questions) {
+        final CrosswordGenerator crosswordGenerator = new CrosswordGenerator();
+        final Crossword crossword = crosswordGenerator.generateCrossword(questions);
+        return crossword.getAnswer().isEmpty();
+    }
 }
