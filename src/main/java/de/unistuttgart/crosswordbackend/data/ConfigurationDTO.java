@@ -15,15 +15,15 @@ import org.springframework.lang.Nullable;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConfigurationDTO {
 
-  @Nullable
-  UUID id;
+    @Nullable
+    UUID id;
 
-  String name;
+    String name;
 
-  Set<QuestionDTO> questions;
+    Set<QuestionDTO> questions;
 
-  public ConfigurationDTO(final String name, final Set<QuestionDTO> questions) {
-    this.name = name;
-    this.questions = questions;
-  }
+    public ConfigurationDTO(final String name, final Set<QuestionDTO> questions) {
+        this.name = name;
+        this.questions = questions;
+    }
 }

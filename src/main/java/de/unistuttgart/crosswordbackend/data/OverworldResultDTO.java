@@ -13,8 +13,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OverworldResultDTO {
 
-  final static String GAME = "CROSSWORDPUZZLE";
-  UUID configurationId;
-  long score;
-  String userId;
+    static final String GAME = "CROSSWORDPUZZLE";
+    UUID configurationId;
+    long score;
+    String userId;
 }

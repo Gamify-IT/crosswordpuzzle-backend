@@ -17,18 +17,18 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Question {
 
-  @Id
-  @GeneratedValue(generator = "uuid")
-  UUID id;
+    @Id
+    @GeneratedValue(generator = "uuid")
+    UUID id;
 
-  @Column(nullable = false)
-  String questionText;
+    @Column(nullable = false)
+    String questionText;
 
-  @Column(nullable = false)
-  String answer;
+    @Column(nullable = false)
+    String answer;
 
-  public Question(final String questionText, final String answer) {
-    this.questionText = questionText;
-    this.answer = answer;
-  }
+    public Question(final String questionText, final String answer) {
+        this.questionText = questionText;
+        this.answer = answer;
+    }
 }

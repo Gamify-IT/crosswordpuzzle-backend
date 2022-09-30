@@ -43,102 +43,102 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 public class GameResultControllerTest {
 
-  @Container
-  public static PostgreSQLContainer postgresDB = new PostgreSQLContainer("postgres:14-alpine")
-    .withDatabaseName("postgres")
-    .withUsername("postgres")
-    .withPassword("postgres");
+    @Container
+    public static PostgreSQLContainer postgresDB = new PostgreSQLContainer("postgres:14-alpine")
+        .withDatabaseName("postgres")
+        .withUsername("postgres")
+        .withPassword("postgres");
 
-  @DynamicPropertySource
-  public static void properties(final DynamicPropertyRegistry registry) {
-    registry.add("spring.datasource.url", postgresDB::getJdbcUrl);
-    registry.add("spring.datasource.username", postgresDB::getUsername);
-    registry.add("spring.datasource.password", postgresDB::getPassword);
-    registry.add("overworld.url", () -> "http://localhost:9561");
-  }
+    @DynamicPropertySource
+    public static void properties(final DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgresDB::getJdbcUrl);
+        registry.add("spring.datasource.username", postgresDB::getUsername);
+        registry.add("spring.datasource.password", postgresDB::getPassword);
+        registry.add("overworld.url", () -> "http://localhost:9561");
+    }
 
-  private final String API_URL = "/results";
+    private final String API_URL = "/results";
 
-  @MockBean
-  JWTValidatorService jwtValidatorService;
+    @MockBean
+    JWTValidatorService jwtValidatorService;
 
-  Cookie cookie = new Cookie("access_token", "testToken");
+    Cookie cookie = new Cookie("access_token", "testToken");
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  private ConfigurationMapper configurationMapper;
+    @Autowired
+    private ConfigurationMapper configurationMapper;
 
-  @Autowired
-  private ConfigurationRepository configurationRepository;
+    @Autowired
+    private ConfigurationRepository configurationRepository;
 
-  @Autowired
-  private WireMockServer mockResultsService;
+    @Autowired
+    private WireMockServer mockResultsService;
 
-  private ObjectMapper objectMapper;
-  private Configuration initialConfig;
-  private ConfigurationDTO initialConfigDTO;
-  private Question initialQuestion1;
-  private Question initialQuestion2;
+    private ObjectMapper objectMapper;
+    private Configuration initialConfig;
+    private ConfigurationDTO initialConfigDTO;
+    private Question initialQuestion1;
+    private Question initialQuestion2;
 
-  @BeforeEach
-  public void createBasicData() throws IOException {
-    ResultMocks.setupMockBooksResponse(mockResultsService);
-    configurationRepository.deleteAll();
-    initialQuestion1 = new Question("question1", "answer1");
-    initialQuestion2 = new Question("question2", "answer2");
+    @BeforeEach
+    public void createBasicData() throws IOException {
+        ResultMocks.setupMockBooksResponse(mockResultsService);
+        configurationRepository.deleteAll();
+        initialQuestion1 = new Question("question1", "answer1");
+        initialQuestion2 = new Question("question2", "answer2");
 
-    final Configuration configuration = new Configuration("config1", Set.of(initialQuestion1, initialQuestion2));
+        final Configuration configuration = new Configuration("config1", Set.of(initialQuestion1, initialQuestion2));
 
-    initialConfig = configurationRepository.save(configuration);
-    initialConfigDTO = configurationMapper.configurationToConfigurationDTO(initialConfig);
+        initialConfig = configurationRepository.save(configuration);
+        initialConfigDTO = configurationMapper.configurationToConfigurationDTO(initialConfig);
 
-    initialQuestion1 =
-      initialConfig
-        .getQuestions()
-        .stream()
-        .filter(question -> question.getQuestionText().equals(initialQuestion1.getQuestionText()))
-        .findAny()
-        .get();
-    initialQuestion2 =
-      initialConfig
-        .getQuestions()
-        .stream()
-        .filter(question -> question.getQuestionText().equals(initialQuestion2.getQuestionText()))
-        .findAny()
-        .get();
+        initialQuestion1 =
+            initialConfig
+                .getQuestions()
+                .stream()
+                .filter(question -> question.getQuestionText().equals(initialQuestion1.getQuestionText()))
+                .findAny()
+                .get();
+        initialQuestion2 =
+            initialConfig
+                .getQuestions()
+                .stream()
+                .filter(question -> question.getQuestionText().equals(initialQuestion2.getQuestionText()))
+                .findAny()
+                .get();
 
-    objectMapper = new ObjectMapper();
+        objectMapper = new ObjectMapper();
 
-    doNothing().when(jwtValidatorService).validateTokenOrThrow("testToken");
-    when(jwtValidatorService.extractUserId("testToken")).thenReturn("testUser");
-  }
+        doNothing().when(jwtValidatorService).validateTokenOrThrow("testToken");
+        when(jwtValidatorService.extractUserId("testToken")).thenReturn("testUser");
+    }
 
-  @AfterEach
-  void deleteBasicData() {
-    configurationRepository.deleteAll();
-  }
+    @AfterEach
+    void deleteBasicData() {
+        configurationRepository.deleteAll();
+    }
 
-  @Test
-  void saveGameResult() throws Exception {
-    final GameResultDTO gameResultDTO = new GameResultDTO(24, 24, UUID.randomUUID());
-    final String bodyValue = objectMapper.writeValueAsString(gameResultDTO);
-    final MvcResult result = mockMvc
-      .perform(post(API_URL).cookie(cookie).content(bodyValue).contentType(MediaType.APPLICATION_JSON))
-      .andExpect(status().isCreated())
-      .andReturn();
+    @Test
+    void saveGameResult() throws Exception {
+        final GameResultDTO gameResultDTO = new GameResultDTO(24, 24, UUID.randomUUID());
+        final String bodyValue = objectMapper.writeValueAsString(gameResultDTO);
+        final MvcResult result = mockMvc
+            .perform(post(API_URL).cookie(cookie).content(bodyValue).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andReturn();
 
-    final GameResultDTO createdGameResultDTO = objectMapper.readValue(
-      result.getResponse().getContentAsString(),
-      GameResultDTO.class
-    );
+        final GameResultDTO createdGameResultDTO = objectMapper.readValue(
+            result.getResponse().getContentAsString(),
+            GameResultDTO.class
+        );
 
-    assertEquals(gameResultDTO, createdGameResultDTO);
-  }
+        assertEquals(gameResultDTO, createdGameResultDTO);
+    }
 
-  @Test
-  void testWithoutCookie_ThrowsBadRequest() throws Exception {
-    mockMvc.perform(post(API_URL).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
-  }
+    @Test
+    void testWithoutCookie_ThrowsBadRequest() throws Exception {
+        mockMvc.perform(post(API_URL).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    }
 }

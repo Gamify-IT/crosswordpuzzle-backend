@@ -17,26 +17,26 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Configuration {
 
-  @Id
-  @GeneratedValue(generator = "uuid")
-  UUID id;
+    @Id
+    @GeneratedValue(generator = "uuid")
+    UUID id;
 
-  @Column(nullable = false)
-  String name;
+    @Column(nullable = false)
+    String name;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  Set<Question> questions;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    Set<Question> questions;
 
-  public Configuration(final String name, final Set<Question> questions) {
-    this.name = name;
-    this.questions = questions;
-  }
+    public Configuration(final String name, final Set<Question> questions) {
+        this.name = name;
+        this.questions = questions;
+    }
 
-  public void addQuestion(final Question question) {
-    this.questions.add(question);
-  }
+    public void addQuestion(final Question question) {
+        this.questions.add(question);
+    }
 
-  public void removeQuestion(final Question question) {
-    this.questions.remove(question);
-  }
+    public void removeQuestion(final Question question) {
+        this.questions.remove(question);
+    }
 }
