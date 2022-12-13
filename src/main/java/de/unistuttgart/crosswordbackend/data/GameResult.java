@@ -27,6 +27,8 @@ public class GameResult {
     int correctTiles;
     int numberOfTiles;
 
+    String userId;
+
     UUID configuration;
 
     @CreationTimestamp

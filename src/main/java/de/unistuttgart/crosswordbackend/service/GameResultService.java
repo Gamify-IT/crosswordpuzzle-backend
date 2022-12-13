@@ -31,26 +31,27 @@ public class GameResultService {
     /**
      * Creates a OverworldResultDTO and sends it to the overworld backend.
      *
-     * @param gameResult extern gameResultDTO
+     * @param gameResultDTO extern gameResultDTO
      * @param userId Id of the user
      * @param accessToken accessToken of the user
      * @throws IllegalArgumentException if at least one of the arguments is null
      */
-    public void submitGameResult(final GameResultDTO gameResult, final String userId, final String accessToken) {
-        if (gameResult == null || userId == null || accessToken == null) {
+    public void submitGameResult(final GameResultDTO gameResultDTO, final String userId, final String accessToken) {
+        if (gameResultDTO == null || userId == null || accessToken == null) {
             throw new IllegalArgumentException("gameResultDTO or userId is null");
         }
-        if (gameResult.getNumberOfTiles() < gameResult.getCorrectTiles()) {
+        if (gameResultDTO.getNumberOfTiles() < gameResultDTO.getCorrectTiles()) {
             throw new IllegalArgumentException("number of correct tiles is bigger than the number of tiles");
         }
-        final int score = 100 * gameResult.getCorrectTiles() / gameResult.getNumberOfTiles();
+        final int score = 100 * gameResultDTO.getCorrectTiles() / gameResultDTO.getNumberOfTiles();
         final OverworldResultDTO overworldResultDTO = new OverworldResultDTO(
-            gameResult.getConfiguration(),
+            gameResultDTO.getConfiguration(),
             score,
             userId
         );
-
-        gameResultRepository.save(gameResultMapper.gameResultDTOToGameResult(gameResult));
+        GameResult gameResult = gameResultMapper.gameResultDTOToGameResult(gameResultDTO);
+        gameResult.setUserId(userId);
+        gameResultRepository.save(gameResult);
 
         try {
             resultClient.submit(accessToken, overworldResultDTO);
