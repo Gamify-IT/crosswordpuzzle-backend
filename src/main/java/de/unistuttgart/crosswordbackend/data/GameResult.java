@@ -3,7 +3,6 @@ package de.unistuttgart.crosswordbackend.data;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
-import javax.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,10 +27,10 @@ public class GameResult {
 
     UUID configuration;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     Set<Question> wrongQuestions;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     Set<Question> correctQuestions;
 
     public GameResult(

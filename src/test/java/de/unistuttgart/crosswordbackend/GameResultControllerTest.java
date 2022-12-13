@@ -122,7 +122,14 @@ public class GameResultControllerTest {
 
     @Test
     void saveGameResult() throws Exception {
-        final GameResultDTO gameResultDTO = new GameResultDTO(24, 24, UUID.randomUUID());
+        final GameResultDTO gameResultDTO = new GameResultDTO(
+            24,
+            24,
+            UUID.randomUUID(),
+            20000,
+            Set.of(new Question("question", "answer")),
+            Set.of(new Question("question2", "answer2"))
+        );
         final String bodyValue = objectMapper.writeValueAsString(gameResultDTO);
         final MvcResult result = mockMvc
             .perform(post(API_URL).cookie(cookie).content(bodyValue).contentType(MediaType.APPLICATION_JSON))
@@ -134,7 +141,9 @@ public class GameResultControllerTest {
             GameResultDTO.class
         );
 
-        assertEquals(gameResultDTO, createdGameResultDTO);
+        assertEquals(gameResultDTO.getCorrectTiles(), createdGameResultDTO.getCorrectTiles());
+        assertEquals(gameResultDTO.getNumberOfTiles(), createdGameResultDTO.getNumberOfTiles());
+        assertEquals(gameResultDTO.getConfiguration(), createdGameResultDTO.getConfiguration());
     }
 
     @Test

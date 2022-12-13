@@ -4,9 +4,8 @@ import de.unistuttgart.crosswordbackend.data.GameResult;
 import de.unistuttgart.crosswordbackend.data.GameResultDTO;
 import de.unistuttgart.crosswordbackend.data.Question;
 import de.unistuttgart.crosswordbackend.data.QuestionDTO;
-import org.mapstruct.Mapper;
-
 import java.util.Set;
+import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface GameResultMapper {
