@@ -1,7 +1,5 @@
 package de.unistuttgart.crosswordbackend.data;
 
-import java.util.Set;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,12 +10,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class GameResultDTO {
-
-    int correctTiles;
-    int numberOfTiles;
-    UUID configuration;
-
-    long duration;
-    Set<GameAnswerDTO> answers;
+public class GameAnswerDTO {
+    String answer;
+    String correctAnswer;
+    String question;
+    boolean correct;
 }
