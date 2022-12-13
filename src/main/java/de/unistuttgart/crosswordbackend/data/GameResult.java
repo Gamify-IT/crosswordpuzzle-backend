@@ -35,7 +35,6 @@ public class GameResult {
     @OneToMany(cascade = CascadeType.ALL)
     Set<GameAnswer> answers;
 
-
     public GameResult(
         final long duration,
         final int correctTiles,

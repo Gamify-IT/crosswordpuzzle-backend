@@ -9,10 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import de.unistuttgart.crosswordbackend.data.Configuration;
-import de.unistuttgart.crosswordbackend.data.ConfigurationDTO;
-import de.unistuttgart.crosswordbackend.data.GameResultDTO;
-import de.unistuttgart.crosswordbackend.data.Question;
+import de.unistuttgart.crosswordbackend.data.*;
 import de.unistuttgart.crosswordbackend.mapper.ConfigurationMapper;
 import de.unistuttgart.crosswordbackend.repositories.ConfigurationRepository;
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
@@ -127,8 +124,7 @@ public class GameResultControllerTest {
             24,
             UUID.randomUUID(),
             20000,
-            Set.of(new Question("question", "answer")),
-            Set.of(new Question("question2", "answer2"))
+            Set.of(new GameAnswerDTO("answer", "correctAnswer", "question", false))
         );
         final String bodyValue = objectMapper.writeValueAsString(gameResultDTO);
         final MvcResult result = mockMvc
