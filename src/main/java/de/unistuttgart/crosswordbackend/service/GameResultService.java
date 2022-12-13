@@ -1,14 +1,17 @@
 package de.unistuttgart.crosswordbackend.service;
 
 import de.unistuttgart.crosswordbackend.clients.ResultClient;
-import de.unistuttgart.crosswordbackend.data.GameResultDTO;
-import de.unistuttgart.crosswordbackend.data.OverworldResultDTO;
+import de.unistuttgart.crosswordbackend.data.*;
+import de.unistuttgart.crosswordbackend.mapper.GameResultMapper;
+import de.unistuttgart.crosswordbackend.repositories.GameResultRepository;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 /**
  * This service handles the logic for the GameResultController.class
@@ -19,6 +22,11 @@ public class GameResultService {
 
     @Autowired
     ResultClient resultClient;
+
+    @Autowired
+    GameResultRepository gameResultRepository;
+    @Autowired
+    GameResultMapper gameResultMapper;
 
     /**
      * Creates a OverworldResultDTO and sends it to the overworld backend.
@@ -41,6 +49,9 @@ public class GameResultService {
             score,
             userId
         );
+
+        gameResultRepository.save(gameResultMapper.gameResultDTOToGameResult(gameResult));
+
         try {
             resultClient.submit(accessToken, overworldResultDTO);
         } catch (final FeignException.BadGateway badGateway) {
