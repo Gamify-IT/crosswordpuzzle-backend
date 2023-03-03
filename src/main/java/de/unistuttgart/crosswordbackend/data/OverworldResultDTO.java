@@ -16,5 +16,5 @@ public class OverworldResultDTO {
     final String game = "CROSSWORDPUZZLE";
     UUID configurationId;
     long score;
-    String playerId;
+    String userId;
 }

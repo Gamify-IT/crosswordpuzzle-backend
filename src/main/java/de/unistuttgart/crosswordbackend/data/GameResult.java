@@ -23,12 +23,11 @@ public class GameResult {
     @GeneratedValue(generator = "uuid")
     private UUID id;
 
-    //duration in seconds
     long duration;
     int correctTiles;
     int numberOfTiles;
 
-    String playerId;
+    String userId;
 
     UUID configuration;
 
