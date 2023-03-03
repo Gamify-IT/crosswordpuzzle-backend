@@ -27,7 +27,7 @@ public class GameResult {
     int correctTiles;
     int numberOfTiles;
 
-    String userId;
+    String playerId;
 
     UUID configuration;
 
