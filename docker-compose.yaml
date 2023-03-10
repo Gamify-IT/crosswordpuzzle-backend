@@ -10,9 +10,9 @@ services:
     restart: on-failure
     environment:
       POSTGRES_SETUP: >
-        keycloak/default.sql
         overworld/default.sql
         crosswordpuzzle/default.sql
+        keycloak/default.sql
 
   keycloak-db:
     container_name: keycloak-db
