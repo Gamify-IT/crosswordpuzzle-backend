@@ -5,7 +5,6 @@ import de.unistuttgart.crosswordbackend.data.*;
 import de.unistuttgart.crosswordbackend.mapper.GameResultMapper;
 import de.unistuttgart.crosswordbackend.repositories.GameResultRepository;
 import feign.FeignException;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,13 +31,13 @@ public class GameResultService {
      * Creates a OverworldResultDTO and sends it to the overworld backend.
      *
      * @param gameResultDTO extern gameResultDTO
-     * @param userId Id of the user
+     * @param playerId Id of the user
      * @param accessToken accessToken of the user
      * @throws IllegalArgumentException if at least one of the arguments is null
      */
-    public void submitGameResult(final GameResultDTO gameResultDTO, final String userId, final String accessToken) {
-        if (gameResultDTO == null || userId == null || accessToken == null) {
-            throw new IllegalArgumentException("gameResultDTO or userId is null");
+    public void submitGameResult(final GameResultDTO gameResultDTO, final String playerId, final String accessToken) {
+        if (gameResultDTO == null || playerId == null || accessToken == null) {
+            throw new IllegalArgumentException("gameResultDTO or playerId is null");
         }
         if (gameResultDTO.getNumberOfTiles() < gameResultDTO.getCorrectTiles()) {
             throw new IllegalArgumentException("number of correct tiles is bigger than the number of tiles");
@@ -47,10 +46,10 @@ public class GameResultService {
         final OverworldResultDTO overworldResultDTO = new OverworldResultDTO(
             gameResultDTO.getConfiguration(),
             score,
-            userId
+            playerId
         );
         GameResult gameResult = gameResultMapper.gameResultDTOToGameResult(gameResultDTO);
-        gameResult.setUserId(userId);
+        gameResult.setPlayerId(playerId);
         gameResultRepository.save(gameResult);
 
         try {
@@ -61,7 +60,7 @@ public class GameResultService {
             log.warn(warning, badGateway);
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, warning);
         } catch (final FeignException.NotFound notFound) {
-            final String warning = String.format("The result could not be saved. Unknown User '%s'.", userId);
+            final String warning = String.format("The result could not be saved. Unknown User '%s'.", playerId);
             log.warn(warning, notFound);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, warning);
         }
