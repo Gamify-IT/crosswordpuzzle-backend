@@ -1,6 +1,5 @@
 package de.unistuttgart.crosswordbackend.data;
 
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,13 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OverworldResultDTO {
+public class GameAnswerDTO {
 
-    final String game = "CROSSWORDPUZZLE";
-    UUID configurationId;
-    long score;
-    String playerId;
+    String answer;
+    String correctAnswer;
+    String question;
+    boolean correct;
 }

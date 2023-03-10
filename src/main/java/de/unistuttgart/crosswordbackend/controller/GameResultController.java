@@ -26,9 +26,9 @@ public class GameResultController {
         @RequestBody final GameResultDTO gameResultDTO
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
-        final String userId = jwtValidatorService.extractUserId(accessToken);
-        log.info("save game result for userId {}: {}", userId, gameResultDTO);
-        gameResultService.submitGameResult(gameResultDTO, userId, accessToken);
+        final String playerId = jwtValidatorService.extractUserId(accessToken);
+        log.info("save game result for playerId {}: {}", playerId, gameResultDTO);
+        gameResultService.submitGameResult(gameResultDTO, playerId, accessToken);
         return gameResultDTO;
     }
 }

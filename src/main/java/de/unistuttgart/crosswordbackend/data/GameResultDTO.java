@@ -1,5 +1,6 @@
 package de.unistuttgart.crosswordbackend.data;
 
+import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,4 +17,7 @@ public class GameResultDTO {
     int correctTiles;
     int numberOfTiles;
     UUID configuration;
+
+    long duration;
+    Set<GameAnswerDTO> answers;
 }

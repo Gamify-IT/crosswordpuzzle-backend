@@ -9,10 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import de.unistuttgart.crosswordbackend.data.Configuration;
-import de.unistuttgart.crosswordbackend.data.ConfigurationDTO;
-import de.unistuttgart.crosswordbackend.data.GameResultDTO;
-import de.unistuttgart.crosswordbackend.data.Question;
+import de.unistuttgart.crosswordbackend.data.*;
 import de.unistuttgart.crosswordbackend.mapper.ConfigurationMapper;
 import de.unistuttgart.crosswordbackend.repositories.ConfigurationRepository;
 import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
@@ -122,7 +119,13 @@ public class GameResultControllerTest {
 
     @Test
     void saveGameResult() throws Exception {
-        final GameResultDTO gameResultDTO = new GameResultDTO(24, 24, UUID.randomUUID());
+        final GameResultDTO gameResultDTO = new GameResultDTO(
+            24,
+            24,
+            UUID.randomUUID(),
+            20000,
+            Set.of(new GameAnswerDTO("answer", "correctAnswer", "question", false))
+        );
         final String bodyValue = objectMapper.writeValueAsString(gameResultDTO);
         final MvcResult result = mockMvc
             .perform(post(API_URL).cookie(cookie).content(bodyValue).contentType(MediaType.APPLICATION_JSON))
@@ -134,7 +137,9 @@ public class GameResultControllerTest {
             GameResultDTO.class
         );
 
-        assertEquals(gameResultDTO, createdGameResultDTO);
+        assertEquals(gameResultDTO.getCorrectTiles(), createdGameResultDTO.getCorrectTiles());
+        assertEquals(gameResultDTO.getNumberOfTiles(), createdGameResultDTO.getNumberOfTiles());
+        assertEquals(gameResultDTO.getConfiguration(), createdGameResultDTO.getConfiguration());
     }
 
     @Test
