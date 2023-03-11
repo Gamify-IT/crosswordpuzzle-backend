@@ -31,4 +31,13 @@ public class Question {
         this.questionText = questionText;
         this.answer = answer;
     }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Question(this.questionText, this.answer);
+        }
+    }
 }

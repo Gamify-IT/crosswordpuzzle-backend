@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -177,11 +178,7 @@ public class ConfigService {
                     String.format("Configuration with id %s not found", id)
                 )
             );
-        final Set<Question> cloneQuestions = new HashSet<>();
-        config
-            .getQuestions()
-            .forEach(question -> cloneQuestions.add(new Question(question.getQuestionText(), question.getAnswer())));
-        final Configuration cloneConfig = new Configuration(config.getName(), cloneQuestions);
+        final Configuration cloneConfig = (Configuration) config.clone();
         final Configuration idConfig = configurationRepository.save(cloneConfig);
         return idConfig.getId();
     }

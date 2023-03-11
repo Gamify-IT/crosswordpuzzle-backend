@@ -333,15 +333,22 @@ class ConfigControllerTest {
     @Test
     void testCloneConfiguration() throws Exception {
         final MvcResult result = mockMvc
-                .perform(post(API_URL + "/" + initialConfig.getId() + "/clone").cookie(cookie).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
+            .perform(
+                post(API_URL + "/" + initialConfig.getId() + "/clone")
+                    .cookie(cookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isCreated())
+            .andReturn();
         final String content = result.getResponse().getContentAsString();
         final UUID clonedId = objectMapper.readValue(content, UUID.class);
         assertNotEquals(initialConfig.getId(), clonedId);
 
         final Configuration cloneConfig = configurationRepository.findById(clonedId).get();
         assertEquals(cloneConfig.getName(), initialConfig.getName());
+        initialConfig.getQuestions().forEach(question -> cloneConfig.getQuestions().forEach(cloneQuestion -> {
+            assertNotEquals(question.getId(), cloneQuestion.getId());
+        }));
         assertNotEquals(cloneConfig, initialConfig);
     }
 }

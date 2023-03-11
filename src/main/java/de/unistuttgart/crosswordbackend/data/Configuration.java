@@ -2,6 +2,7 @@ package de.unistuttgart.crosswordbackend.data;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -38,5 +39,18 @@ public class Configuration {
 
     public void removeQuestion(final Question question) {
         this.questions.remove(question);
+    }
+
+    @Override
+    public Object clone() {
+        Configuration config;
+        try {
+            config = (Configuration) super.clone();
+        } catch (CloneNotSupportedException e) {
+            config = new Configuration(this.getName(), this.getQuestions());
+        }
+        config.questions =
+            this.questions.stream().map(question -> question = (Question) question.clone()).collect(Collectors.toSet());
+        return config;
     }
 }
