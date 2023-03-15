@@ -33,7 +33,7 @@ public class Question {
     }
 
     @Override
-    public Object clone() {
+    public Question clone() {
         return new Question(this.questionText, this.answer);
     }
 }

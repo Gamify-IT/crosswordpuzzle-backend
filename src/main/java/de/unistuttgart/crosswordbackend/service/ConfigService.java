@@ -178,7 +178,7 @@ public class ConfigService {
                     String.format("Configuration with id %s not found", id)
                 )
             );
-        final Configuration cloneConfig = (Configuration) config.clone();
+        final Configuration cloneConfig = config.clone();
         final Configuration idConfig = configurationRepository.save(cloneConfig);
         return idConfig.getId();
     }
