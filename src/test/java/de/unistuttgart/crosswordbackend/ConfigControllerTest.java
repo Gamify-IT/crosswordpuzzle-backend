@@ -355,6 +355,7 @@ class ConfigControllerTest {
                 cloneConfig
                     .getQuestions()
                     .forEach(cloneQuestion -> assertNotEquals(question.getId(), cloneQuestion.getId()));
+                // test if questions are still present
                 assertTrue(
                     cloneConfig
                         .getQuestions()

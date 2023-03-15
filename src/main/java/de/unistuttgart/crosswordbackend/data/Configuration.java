@@ -43,9 +43,9 @@ public class Configuration {
 
     @Override
     public Configuration clone() {
-        final Configuration config = new Configuration(this.getName(), this.getQuestions());
-        config.questions =
-            this.questions.stream().map(question -> question = question.clone()).collect(Collectors.toSet());
-        return config;
+        return new Configuration(
+            this.getName(),
+            this.questions.stream().map(question -> question = question.clone()).collect(Collectors.toSet())
+        );
     }
 }
