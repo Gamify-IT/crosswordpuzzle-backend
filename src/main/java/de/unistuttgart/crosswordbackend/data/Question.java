@@ -34,10 +34,6 @@ public class Question {
 
     @Override
     public Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException e) {
-            return new Question(this.questionText, this.answer);
-        }
+        return new Question(this.questionText, this.answer);
     }
 }

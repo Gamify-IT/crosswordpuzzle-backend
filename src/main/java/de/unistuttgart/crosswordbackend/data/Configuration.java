@@ -43,12 +43,7 @@ public class Configuration {
 
     @Override
     public Object clone() {
-        Configuration config;
-        try {
-            config = (Configuration) super.clone();
-        } catch (CloneNotSupportedException e) {
-            config = new Configuration(this.getName(), this.getQuestions());
-        }
+        final Configuration config = new Configuration(this.getName(), this.getQuestions());
         config.questions =
             this.questions.stream().map(question -> question = (Question) question.clone()).collect(Collectors.toSet());
         return config;
