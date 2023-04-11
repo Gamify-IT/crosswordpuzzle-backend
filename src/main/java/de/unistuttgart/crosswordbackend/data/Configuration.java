@@ -45,7 +45,7 @@ public class Configuration {
     public Configuration clone() {
         return new Configuration(
             this.getName(),
-            this.questions.stream().map(question -> question = question.clone()).collect(Collectors.toSet())
+            this.questions.stream().map(Question::clone).collect(Collectors.toSet())
         );
     }
 }
