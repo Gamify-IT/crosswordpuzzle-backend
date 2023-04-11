@@ -8,9 +8,12 @@ import de.unistuttgart.crosswordbackend.mapper.ConfigurationMapper;
 import de.unistuttgart.crosswordbackend.mapper.QuestionMapper;
 import de.unistuttgart.crosswordbackend.repositories.ConfigurationRepository;
 import de.unistuttgart.crosswordbackend.repositories.QuestionRepository;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -164,5 +167,19 @@ public class ConfigService {
                     String.format("Question with ID %s does not exist in configuration %s.", questionId, configuration)
                 )
             );
+    }
+
+    public UUID cloneConfiguration(final UUID id) {
+        final Configuration config = configurationRepository
+            .findById(id)
+            .orElseThrow(() ->
+                new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    String.format("Configuration with id %s not found", id)
+                )
+            );
+        final Configuration cloneConfig = config.clone();
+        final Configuration idConfig = configurationRepository.save(cloneConfig);
+        return idConfig.getId();
     }
 }

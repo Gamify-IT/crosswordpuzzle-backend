@@ -31,4 +31,9 @@ public class Question {
         this.questionText = questionText;
         this.answer = answer;
     }
+
+    @Override
+    public Question clone() {
+        return new Question(this.questionText, this.answer);
+    }
 }
