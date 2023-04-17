@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OverworldResultDTO {
 
-    static final String game = "CROSSWORDPUZZLE";
+    final String game = "CROSSWORDPUZZLE"; //NOSONAR
     UUID configurationId;
     long score;
     String playerId;
