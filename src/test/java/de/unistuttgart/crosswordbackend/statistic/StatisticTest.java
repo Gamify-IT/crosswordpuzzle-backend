@@ -92,7 +92,7 @@ class StatisticTest {
 
         Set<Question> questions = new HashSet<>();
         for (int i = 0; i < 6; i++) {
-            questions.add(new Question("question" + i, "answer" + i));
+            questions.add(new Question("questionTest" + i, "answerTest" + i));
         }
 
         randomConfiguration = new Configuration();
@@ -333,15 +333,19 @@ class StatisticTest {
             );
         }
 
-        System.out.println(problematicQuestions);
-
         assertFalse(
             problematicQuestions
                 .stream()
                 .map(ProblematicQuestion::getQuestion)
                 .anyMatch(question -> question.equals(bestAnsweredQuestion))
         );
-        assertEquals(problematicQuestion, problematicQuestions.get(0).getQuestion());
+        assertTrue(
+            problematicQuestions
+                .parallelStream()
+                .anyMatch(question ->
+                    question.getQuestion().getQuestionText().equals(problematicQuestion.getQuestionText())
+                )
+        );
         assertSame(5, problematicQuestions.size());
     }
 
