@@ -44,7 +44,7 @@ public class StatisticService {
         final Configuration configuration = configService.getConfiguration(configurationId);
         final List<GameResult> gameResults = gameResultRepository.findByConfiguration(configurationId);
         final List<ProblematicQuestion> problematicQuestions = new ArrayList<>();
-        for (Question question : configuration.getQuestions()) {
+        for (final Question question : configuration.getQuestions()) {
             problematicQuestions.add(new ProblematicQuestion(0, 0, 0, questionMapper.questionToQuestionDTO(question)));
         }
 
@@ -60,12 +60,15 @@ public class StatisticService {
     }
 
     /**
-     * Counts amount of right answered questions and adds them to the problematic question list
+     * Counts amount of right answered questions and adds them to the problematic question counter
      *
      * @param problematicQuestions the list of problematic questions where the right answered counter should be increased
      * @param gameResult the game result which contains the answered questions
      */
-    private void countRightAnsweredQuestions(List<ProblematicQuestion> problematicQuestions, GameResult gameResult) {
+    private void countRightAnsweredQuestions(
+        final List<ProblematicQuestion> problematicQuestions,
+        final GameResult gameResult
+    ) {
         gameResult
             .getAnswers()
             .parallelStream()
@@ -82,12 +85,15 @@ public class StatisticService {
     }
 
     /**
-     * Counts amount of wrong answered questions and adds them to the problematic question list
+     * Counts amount of wrong answered questions and adds them to the problematic question counter
      *
      * @param problematicQuestions the list of problematic questions where the wrong answered counter should be increased
      * @param gameResult the game result which contains the answered questions
      */
-    private void countWrongAnsweredQuestions(List<ProblematicQuestion> problematicQuestions, GameResult gameResult) {
+    private void countWrongAnsweredQuestions(
+        final List<ProblematicQuestion> problematicQuestions,
+        final GameResult gameResult
+    ) {
         gameResult
             .getAnswers()
             .parallelStream()
@@ -108,10 +114,12 @@ public class StatisticService {
      *
      * @param problematicQuestions the list of problematic questions to sort
      */
-    private void sortProblematicQuestionsByPercentageWrongAnswers(List<ProblematicQuestion> problematicQuestions) {
+    private void sortProblematicQuestionsByPercentageWrongAnswers(
+        final List<ProblematicQuestion> problematicQuestions
+    ) {
         problematicQuestions.sort((o1, o2) -> {
-            double percantageWrong1 = (double) o1.getWrongAnswers() / (double) o1.getAttempts();
-            double percantageWrong2 = (double) o2.getWrongAnswers() / (double) o2.getAttempts();
+            final double percantageWrong1 = (double) o1.getWrongAnswers() / (double) o1.getAttempts();
+            final double percantageWrong2 = (double) o2.getWrongAnswers() / (double) o2.getAttempts();
             return Double.compare(percantageWrong2, percantageWrong1);
         });
     }
@@ -132,7 +140,7 @@ public class StatisticService {
         final List<GameResult> gameResults = gameResultRepository.findByConfiguration(configurationId);
         final List<TimeSpentDistribution> timeSpentDistributions = new ArrayList<>();
         for (int i = 0; i < TIME_SPENT_DISTRIBUTION_PERCENTAGES.length - 1; i++) {
-            TimeSpentDistribution timeSpentDistribution = new TimeSpentDistribution();
+            final TimeSpentDistribution timeSpentDistribution = new TimeSpentDistribution();
             timeSpentDistribution.setFromPercentage(TIME_SPENT_DISTRIBUTION_PERCENTAGES[i]);
             timeSpentDistribution.setToPercentage(TIME_SPENT_DISTRIBUTION_PERCENTAGES[i + 1]);
             timeSpentDistributions.add(timeSpentDistribution);
@@ -142,7 +150,7 @@ public class StatisticService {
 
         // calculate time spent time borders to time spent distribution percentage
         int currentGameResultIndex = 0;
-        for (TimeSpentDistribution timeSpentDistribution : timeSpentDistributions) {
+        for (final TimeSpentDistribution timeSpentDistribution : timeSpentDistributions) {
             GameResult gameResult = null;
             while (currentGameResultIndex < (timeSpentDistribution.getToPercentage() / 100.0) * gameResults.size()) {
                 gameResult = gameResults.get(currentGameResultIndex);
@@ -164,7 +172,7 @@ public class StatisticService {
      *
      * @param gameResults the list of game results to sort
      */
-    private void sortGameResultsByPlayedTime(List<GameResult> gameResults) {
+    private void sortGameResultsByPlayedTime(final List<GameResult> gameResults) {
         gameResults.sort(Comparator.comparingLong(GameResult::getDuration));
     }
 }

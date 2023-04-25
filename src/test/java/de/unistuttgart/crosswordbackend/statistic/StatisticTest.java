@@ -103,13 +103,13 @@ class StatisticTest {
         gameResults = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
-            GameResultDTO gameResultDTO = new GameResultDTO();
+            final GameResultDTO gameResultDTO = new GameResultDTO();
             gameResultDTO.setConfiguration(randomConfiguration.getId());
             gameResultDTO.setDuration((long) (Math.random() * 100));
-            Set<GameAnswer> answers = new HashSet<>();
+            final Set<GameAnswer> answers = new HashSet<>();
             int correctTiles = 0;
             int numberOfTiles = 0;
-            for (Question question : randomConfiguration.getQuestions()) {
+            for (final Question question : randomConfiguration.getQuestions()) {
                 if (new Random().nextInt(10) > 3) {
                     answers.add(
                         new GameAnswer(
@@ -138,7 +138,7 @@ class StatisticTest {
             gameResultDTO.setCorrectTiles(correctTiles);
             gameResultDTO.setNumberOfTiles(numberOfTiles);
             gameResultDTO.setAnswers(gameAnswerMapper.gameAnswersToGameAnswerDTOs(answers));
-            GameResult gameResult = gameResultRepository.save(
+            final GameResult gameResult = gameResultRepository.save(
                 gameResultMapper.gameResultDTOToGameResult(gameResultDTO)
             );
             gameResults.add(gameResult);
@@ -154,12 +154,12 @@ class StatisticTest {
         staticConfiguration.setName("staticConfiguration");
         staticConfiguration = configurationRepository.save(staticConfiguration);
 
-        List<Question> questionList = questions.stream().toList();
+        final List<Question> questionList = questions.stream().toList();
 
-        GameResultDTO gameResultDTO1 = new GameResultDTO();
+        final GameResultDTO gameResultDTO1 = new GameResultDTO();
         gameResultDTO1.setConfiguration(staticConfiguration.getId());
         gameResultDTO1.setDuration((long) (Math.random() * 100));
-        Set<GameAnswer> answers1 = new HashSet<>();
+        final Set<GameAnswer> answers1 = new HashSet<>();
         int correctTiles1 = 0;
         int numberOfTiles1 = 0;
 
@@ -192,10 +192,10 @@ class StatisticTest {
         gameResultDTO1.setNumberOfTiles(numberOfTiles1);
         gameResultDTO1.setAnswers(gameAnswerMapper.gameAnswersToGameAnswerDTOs(answers1));
 
-        GameResultDTO gameResultDTO2 = new GameResultDTO();
+        final GameResultDTO gameResultDTO2 = new GameResultDTO();
         gameResultDTO2.setConfiguration(staticConfiguration.getId());
         gameResultDTO2.setDuration((long) (Math.random() * 100));
-        Set<GameAnswer> answers2 = new HashSet<>();
+        final Set<GameAnswer> answers2 = new HashSet<>();
         int correctTiles2 = 0;
         int numberOfTiles2 = 0;
         answers2.add(
@@ -226,10 +226,10 @@ class StatisticTest {
         gameResultDTO2.setNumberOfTiles(numberOfTiles2);
         gameResultDTO2.setAnswers(gameAnswerMapper.gameAnswersToGameAnswerDTOs(answers2));
 
-        GameResultDTO gameResultDTO3 = new GameResultDTO();
+        final GameResultDTO gameResultDTO3 = new GameResultDTO();
         gameResultDTO3.setConfiguration(staticConfiguration.getId());
         gameResultDTO3.setDuration((long) (Math.random() * 100));
-        Set<GameAnswer> answers3 = new HashSet<>();
+        final Set<GameAnswer> answers3 = new HashSet<>();
         int correctTiles3 = 0;
         int numberOfTiles3 = 0;
         answers3.add(
@@ -260,10 +260,10 @@ class StatisticTest {
         gameResultDTO3.setNumberOfTiles(numberOfTiles3);
         gameResultDTO3.setAnswers(gameAnswerMapper.gameAnswersToGameAnswerDTOs(answers3));
 
-        GameResultDTO gameResultDTO4 = new GameResultDTO();
+        final GameResultDTO gameResultDTO4 = new GameResultDTO();
         gameResultDTO4.setConfiguration(staticConfiguration.getId());
         gameResultDTO4.setDuration((long) (Math.random() * 100));
-        Set<GameAnswer> answers4 = new HashSet<>();
+        final Set<GameAnswer> answers4 = new HashSet<>();
         int correctTiles4 = 0;
         int numberOfTiles4 = 0;
         answers4.add(
@@ -363,7 +363,7 @@ class StatisticTest {
         final List<TimeSpentDistribution> timeSpentDistributions = Arrays.asList(
             objectMapper.readValue(result.getResponse().getContentAsString(), TimeSpentDistribution[].class)
         );
-        long amountOfGameResults = timeSpentDistributions.stream().map(TimeSpentDistribution::getCount).count();
+        final long amountOfGameResults = timeSpentDistributions.stream().map(TimeSpentDistribution::getCount).count();
         assertEquals(numberOfGameResultsOfStaticConfiguration, amountOfGameResults);
     }
 }
