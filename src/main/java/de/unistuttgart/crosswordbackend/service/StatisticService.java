@@ -49,10 +49,10 @@ public class StatisticService {
         }
 
         for (final GameResult gameResult : gameResults) {
-            // iterate over all wrong answered round results and add wrong answered counter for this problematic question
+            // iterate over all wrong answered questions and add wrong answered counter for this problematic question
             countWrongAnsweredQuestions(problematicQuestions, gameResult);
 
-            // iterate over all correct answered round results and add correct answered counter for this problematic question
+            // iterate over all correct answered questions and add correct answered counter for this problematic question
             countRightAnsweredQuestions(problematicQuestions, gameResult);
         }
         sortProblematicQuestionsByPercentageWrongAnswers(problematicQuestions);
@@ -70,11 +70,11 @@ public class StatisticService {
             .getAnswers()
             .parallelStream()
             .filter(GameAnswer::isCorrect)
-            .forEach(roundResult ->
+            .forEach(gameAnswer ->
                 problematicQuestions
                     .stream()
                     .filter(problematicQuestion ->
-                        problematicQuestion.getQuestion().getQuestionText().equals(roundResult.getQuestion())
+                        problematicQuestion.getQuestion().getQuestionText().equals(gameAnswer.getQuestion())
                     )
                     .findAny()
                     .ifPresent(ProblematicQuestion::addCorrectAnswer)
@@ -92,11 +92,11 @@ public class StatisticService {
             .getAnswers()
             .parallelStream()
             .filter(answer -> !answer.isCorrect())
-            .forEach(roundResult ->
+            .forEach(gameAnswer ->
                 problematicQuestions
                     .stream()
                     .filter(problematicQuestion ->
-                        problematicQuestion.getQuestion().getQuestionText().equals(roundResult.getQuestion())
+                        problematicQuestion.getQuestion().getQuestionText().equals(gameAnswer.getQuestion())
                     )
                     .findAny()
                     .ifPresent(ProblematicQuestion::addWrongAnswer)
