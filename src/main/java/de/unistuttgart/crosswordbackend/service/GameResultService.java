@@ -48,7 +48,7 @@ public class GameResultService {
             score,
             playerId
         );
-        GameResult gameResult = gameResultMapper.gameResultDTOToGameResult(gameResultDTO);
+        final GameResult gameResult = gameResultMapper.gameResultDTOToGameResult(gameResultDTO);
         gameResult.setPlayerId(playerId);
         gameResultRepository.save(gameResult);
 

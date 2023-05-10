@@ -2,14 +2,12 @@ package de.unistuttgart.crosswordbackend.data.statistic;
 
 import de.unistuttgart.crosswordbackend.data.QuestionDTO;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProblematicQuestion {
 
@@ -18,6 +16,10 @@ public class ProblematicQuestion {
     int wrongAnswers;
 
     QuestionDTO question;
+
+    public ProblematicQuestion(final QuestionDTO question) {
+        this.question = question;
+    }
 
     public void addCorrectAnswer() {
         correctAnswers++;

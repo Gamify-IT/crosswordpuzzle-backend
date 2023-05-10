@@ -43,9 +43,9 @@ public class StatisticService {
     public List<ProblematicQuestion> getProblematicQuestions(final UUID configurationId) {
         final Configuration configuration = configService.getConfiguration(configurationId);
         final List<GameResult> gameResults = gameResultRepository.findByConfiguration(configurationId);
-        final List<ProblematicQuestion> problematicQuestions = new ArrayList<>();
+        final List<ProblematicQuestion> problematicQuestions = new ArrayList<>(configuration.getQuestions().size());
         for (final Question question : configuration.getQuestions()) {
-            problematicQuestions.add(new ProblematicQuestion(0, 0, 0, questionMapper.questionToQuestionDTO(question)));
+            problematicQuestions.add(new ProblematicQuestion(questionMapper.questionToQuestionDTO(question)));
         }
 
         for (final GameResult gameResult : gameResults) {
