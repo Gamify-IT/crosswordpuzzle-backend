@@ -27,6 +27,8 @@ public class GameResultService {
     @Autowired
     GameResultMapper gameResultMapper;
 
+    int flagFirstTimeFinished = 0;
+
     /**
      * Creates a OverworldResultDTO and sends it to the overworld backend.
      *
@@ -43,10 +45,13 @@ public class GameResultService {
             throw new IllegalArgumentException("number of correct tiles is bigger than the number of tiles");
         }
         final int score = 100 * gameResultDTO.getCorrectTiles() / gameResultDTO.getNumberOfTiles();
+        final int rewards = calculateRewards(score);
+
         final OverworldResultDTO overworldResultDTO = new OverworldResultDTO(
             gameResultDTO.getConfiguration(),
             score,
-            playerId
+            playerId,
+            rewards
         );
         final GameResult gameResult = gameResultMapper.gameResultDTOToGameResult(gameResultDTO);
         gameResult.setPlayerId(playerId);
@@ -63,6 +68,30 @@ public class GameResultService {
             final String warning = String.format("The result could not be saved. Unknown User '%s'.", playerId);
             log.warn(warning, notFound);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, warning);
+        }
+    }
+
+    /**
+     * This method calculates the rewards for one crossword round based on the gained scores in the
+     * current round
+     *
+     * first round: 10 rewards, second round: 5 rewards, after that: 2 rounds per finished round
+     *
+     * @param score the score achieved in the current round
+     * @return the rewards earned for the current round
+     */
+    private int calculateRewards(final int score) {
+        if (score == 100 && flagFirstTimeFinished == 0) {
+            flagFirstTimeFinished++;
+            return 10;
+        } else if (score == 100 && flagFirstTimeFinished == 1) {
+            flagFirstTimeFinished++;
+            return 5;
+        } else if (score == 100 && flagFirstTimeFinished == 2) {
+            flagFirstTimeFinished++;
+            return 2;
+        } else {
+            return 0;
         }
     }
 }

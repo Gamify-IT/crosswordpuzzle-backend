@@ -88,7 +88,7 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.uni-stuttgart.gamify-it</groupId>
+            <groupId>com.github.Gamify-IT</groupId>
             <artifactId>authentification-validator</artifactId>
             <version>v1.0.0</version>
         </dependency>
@@ -96,10 +96,9 @@
 
     <repositories>
         <repository>
-            <id>sqa-artifactory</id>
-            <name>SQA Artifactory-releases</name>
-            <url>https://rss-artifactory.ddnss.org/artifactory/libs-release</url>
-        </repository>
+           <id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+           </repository>
     </repositories>
 
     <dependencyManagement>
