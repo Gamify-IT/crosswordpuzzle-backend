@@ -27,6 +27,9 @@ public class GameResultService {
     @Autowired
     GameResultMapper gameResultMapper;
 
+    private static int hundredScoreCount = 0;
+
+
     int flagFirstTimeFinished = 0;
 
     /**
@@ -72,26 +75,21 @@ public class GameResultService {
     }
 
     /**
-     * This method calculates the rewards for one crossword round based on the gained scores in the
+     * This method calculates the rewards for one crosswordpuzzle round based on the gained scores in the
      * current round
-     *
-     * first round: 10 rewards, second round: 5 rewards, after that: 2 rounds per finished round
-     *
-     * @param score the score achieved in the current round
-     * @return the rewards earned for the current round
+     * @param score
+     * @return gained rewards
      */
     private int calculateRewards(final int score) {
-        if (score == 100 && flagFirstTimeFinished == 0) {
-            flagFirstTimeFinished++;
-            return 10;
-        } else if (score == 100 && flagFirstTimeFinished == 1) {
-            flagFirstTimeFinished++;
-            return 5;
-        } else if (score == 100 && flagFirstTimeFinished == 2) {
-            flagFirstTimeFinished++;
-            return 2;
-        } else {
-            return 0;
+        if (score < 0 || score > 100) {
+            throw new IllegalArgumentException("Result score must be between 0 and 100");
         }
+        if (score == 100 && hundredScoreCount < 3) {
+            hundredScoreCount++;
+            return 10;
+        } else if (score == 100 && hundredScoreCount >= 3) {
+            return 5;
+        }
+        return score/10;
     }
 }
