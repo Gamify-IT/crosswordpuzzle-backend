@@ -20,4 +20,10 @@ public class GameResultDTO {
 
     long duration;
     Set<GameAnswerDTO> answers;
+
+    int score;
+
+
+
+
 }

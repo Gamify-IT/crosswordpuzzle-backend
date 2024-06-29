@@ -43,6 +43,8 @@ public class GameResultService {
             throw new IllegalArgumentException("number of correct tiles is bigger than the number of tiles");
         }
         final int score = 100 * gameResultDTO.getCorrectTiles() / gameResultDTO.getNumberOfTiles();
+        gameResultDTO.setScore(score);
+
         final OverworldResultDTO overworldResultDTO = new OverworldResultDTO(
             gameResultDTO.getConfiguration(),
             score,

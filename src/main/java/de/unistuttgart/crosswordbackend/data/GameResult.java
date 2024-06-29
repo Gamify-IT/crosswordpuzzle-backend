@@ -40,17 +40,22 @@ public class GameResult {
     @OneToMany(cascade = CascadeType.ALL)
     Set<GameAnswer> answers;
 
+    int score;
+
     public GameResult(
         final long duration,
         final int correctTiles,
         final int numberOfTiles,
         final UUID configuration,
-        final Set<GameAnswer> answers
+        final Set<GameAnswer> answers,
+        final int score
+
     ) {
         this.duration = duration;
         this.correctTiles = correctTiles;
         this.numberOfTiles = numberOfTiles;
         this.configuration = configuration;
         this.answers = answers;
+        this.score = score;
     }
 }
