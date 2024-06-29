@@ -20,7 +20,7 @@ public class GameResultDTO {
     Set<GameAnswerDTO> answers;
 
 
-    long score;
+    int score;
 
     int rewards;
 

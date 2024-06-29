@@ -47,7 +47,7 @@ public class GameResultService {
         if (gameResultDTO.getNumberOfTiles() < gameResultDTO.getCorrectTiles()) {
             throw new IllegalArgumentException("number of correct tiles is bigger than the number of tiles");
         }
-        final long score = 100L * gameResultDTO.getCorrectTiles() / gameResultDTO.getNumberOfTiles();
+        final int score = 100 * gameResultDTO.getCorrectTiles() / gameResultDTO.getNumberOfTiles();
         final int rewards = calculateRewards(score);
 
         gameResultDTO.setScore(score);
@@ -83,7 +83,7 @@ public class GameResultService {
      * @param score
      * @return gained rewards
      */
-    private int calculateRewards(final long score) {
+    private int calculateRewards(final int score) {
         if (score < 0 || score > 100) {
             throw new IllegalArgumentException("Result score must be between 0 and 100");
         }
@@ -93,6 +93,6 @@ public class GameResultService {
         } else if (score == 100 && hundredScoreCount >= 3) {
             return 5;
         }
-        return (int)score/10;
+        return score/10;
     }
 }
