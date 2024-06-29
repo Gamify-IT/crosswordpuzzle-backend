@@ -124,7 +124,9 @@ public class GameResultControllerTest {
             24,
             UUID.randomUUID(),
             20000,
-            Set.of(new GameAnswerDTO("answer", "correctAnswer", "question", false))
+            Set.of(new GameAnswerDTO("answer", "correctAnswer", "question", false)),
+                100,
+                30
         );
         final String bodyValue = objectMapper.writeValueAsString(gameResultDTO);
         final MvcResult result = mockMvc
