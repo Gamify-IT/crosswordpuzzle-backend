@@ -27,6 +27,9 @@ public class GameResultService {
     @Autowired
     GameResultMapper gameResultMapper;
 
+    private static int hundredScoreCount = 0;
+
+
     /**
      * Creates a OverworldResultDTO and sends it to the overworld backend.
      *
@@ -43,10 +46,16 @@ public class GameResultService {
             throw new IllegalArgumentException("number of correct tiles is bigger than the number of tiles");
         }
         final int score = 100 * gameResultDTO.getCorrectTiles() / gameResultDTO.getNumberOfTiles();
+        final int rewards = calculateRewards(score);
+
+        gameResultDTO.setRewards(rewards);
+        gameResultDTO.setScore(score);
+
         final OverworldResultDTO overworldResultDTO = new OverworldResultDTO(
             gameResultDTO.getConfiguration(),
             score,
-            playerId
+            playerId,
+                rewards
         );
         final GameResult gameResult = gameResultMapper.gameResultDTOToGameResult(gameResultDTO);
         gameResult.setPlayerId(playerId);
@@ -64,5 +73,18 @@ public class GameResultService {
             log.warn(warning, notFound);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, warning);
         }
+    }
+
+    private int calculateRewards(final int resultScore) {
+        if (resultScore < 0) {
+            throw new IllegalArgumentException("Result score cannot be less than zero");
+        }
+        if (resultScore == 100 && hundredScoreCount < 3) {
+            hundredScoreCount++;
+            return 10;
+        } else if (resultScore == 100 && hundredScoreCount >= 3) {
+            return 5;
+        }
+        return resultScore/10;
     }
 }
