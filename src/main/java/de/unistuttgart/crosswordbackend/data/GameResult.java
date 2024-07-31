@@ -40,6 +40,9 @@ public class GameResult {
     @OneToMany(cascade = CascadeType.ALL)
     Set<GameAnswer> answers;
 
+    int score;
+    int rewards;
+
     public GameResult(
         final long duration,
         final int correctTiles,
