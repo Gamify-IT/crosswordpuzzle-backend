@@ -1,9 +1,7 @@
 package de.unistuttgart.crosswordbackend.service;
 
-import de.unistuttgart.crosswordbackend.data.Configuration;
-import de.unistuttgart.crosswordbackend.data.ConfigurationDTO;
-import de.unistuttgart.crosswordbackend.data.Question;
-import de.unistuttgart.crosswordbackend.data.QuestionDTO;
+import de.unistuttgart.crosswordbackend.clients.OverworldClient;
+import de.unistuttgart.crosswordbackend.data.*;
 import de.unistuttgart.crosswordbackend.mapper.ConfigurationMapper;
 import de.unistuttgart.crosswordbackend.mapper.QuestionMapper;
 import de.unistuttgart.crosswordbackend.repositories.ConfigurationRepository;
@@ -12,6 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.transaction.Transactional;
+
+import de.unistuttgart.gamifyit.authentificationvalidator.JWTValidatorService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,13 @@ public class ConfigService {
     @Autowired
     QuestionRepository questionRepository;
 
+
+    @Autowired
+    private OverworldClient overworldClient;
+
+    @Autowired
+    private JWTValidatorService jwtValidatorService;
+
     /**
      * Search a configuration by given id
      *
@@ -52,6 +59,44 @@ public class ConfigService {
                     String.format("There is no configuration with ID %s.", id)
                 )
             );
+    }
+
+    /**
+     * Search a configuration by given id and get volume level from overworld-backend
+     *
+     * @param id the id of the configuration searching for
+     * @param accessToken the users access token
+     * @return the found configuration
+     * @throws ResponseStatusException  when configuration by configurationName could not be found
+     * @throws IllegalArgumentException if at least one of the arguments is null
+     */
+    public Configuration getAllConfigurations(final UUID id, final String accessToken) {
+        if (id == null) {
+            throw new IllegalArgumentException("id is null");
+        }
+        final String userId = jwtValidatorService.extractUserId(accessToken);
+
+        KeybindingDTO keyBindingVolumeLevel = overworldClient.getKeybindingStatistic(userId, "VOLUME_LEVEL", accessToken);
+        Integer volumeLevel = Integer.parseInt(keyBindingVolumeLevel.getKey());
+
+
+        Configuration config = configurationRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                String.format("There is no configuration with id %s.", id)
+                        )
+                );
+        config.setVolumeLevel(volumeLevel);
+        return configurationRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                String.format("There is no configuration with id %s.", id)
+                        )
+                );
     }
 
     /**

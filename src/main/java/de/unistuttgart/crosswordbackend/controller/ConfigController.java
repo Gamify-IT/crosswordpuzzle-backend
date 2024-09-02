@@ -49,7 +49,9 @@ public class ConfigController {
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         log.debug("get configuration {}", id);
-        return configurationMapper.configurationToConfigurationDTO(configService.getConfiguration(id));
+        return configurationMapper.configurationToConfigurationDTO(
+                configService.getAllConfigurations(id, accessToken)
+        );
     }
 
     @PostMapping("")
