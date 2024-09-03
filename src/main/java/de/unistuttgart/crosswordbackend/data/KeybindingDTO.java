@@ -1,32 +1,19 @@
 package de.unistuttgart.crosswordbackend.data;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 /**
  * The KeybindingDTO.class contains all data that is retrieved from the overworld-backend
  */
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class KeybindingDTO {
     private String binding;
     private String key;
-
-    public KeybindingDTO() {}
-
-    public KeybindingDTO(String binding, String key) {
-        this.binding = binding;
-        this.key = key;
-    }
-
-    public String getBinding() {
-        return binding;
-    }
-
-    public void setBinding(String binding) {
-        this.binding = binding;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
 }
