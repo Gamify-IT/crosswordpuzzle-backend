@@ -22,6 +22,11 @@ public class ConfigurationDTO {
 
     Set<QuestionDTO> questions;
 
+    /**
+     * The volume level that is setted by the player.
+     */
+    Integer volumeLevel;
+
     public ConfigurationDTO(final String name, final Set<QuestionDTO> questions) {
         this.name = name;
         this.questions = questions;
