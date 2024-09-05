@@ -44,8 +44,18 @@ public class ConfigController {
 
     @GetMapping("/{id}")
     public ConfigurationDTO getConfiguration(
-        @PathVariable final UUID id,
-        @CookieValue("access_token") final String accessToken
+            @CookieValue("access_token") final String accessToken,
+            @PathVariable final UUID id
+    ) {
+        jwtValidatorService.validateTokenOrThrow(accessToken);
+        log.debug("get configuration {}", id);
+        return configurationMapper.configurationToConfigurationDTO(configService.getConfiguration(id));
+    }
+
+    @GetMapping("/{id}/volume")
+    public ConfigurationDTO getAllConfiguration(
+            @CookieValue("access_token") final String accessToken,
+            @PathVariable final UUID id
     ) {
         jwtValidatorService.validateTokenOrThrow(accessToken);
         log.debug("get configuration {}", id);
