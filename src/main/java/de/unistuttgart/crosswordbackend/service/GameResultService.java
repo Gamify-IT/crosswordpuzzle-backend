@@ -94,7 +94,7 @@ public class GameResultService {
         if (resultScore == 100 && hundredScoreCount < 3) {
             hundredScoreCount++;
             return 10;
-        } else if (resultScore == 100 && hundredScoreCount >= 3) {
+        } else if (resultScore == 100) {
             return 5;
         }
         return resultScore/10;
