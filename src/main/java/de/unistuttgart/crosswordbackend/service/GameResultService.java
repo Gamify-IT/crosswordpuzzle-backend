@@ -75,6 +75,17 @@ public class GameResultService {
         }
     }
 
+    /**
+     * This method calculates the rewards for one crosswordpuzzle round based on the gained scores in the
+     * current round
+     *
+     * first three rounds: 10 coins, after that for each 100% only 5 coins
+     * if score != 100% then the score is divided by 10
+     *
+     * @param resultScore the score gained in the game
+     * @return rewards as int
+     * @throws IllegalArgumentException if resultScore < 0
+     */
     private int calculateRewards(final int resultScore) {
         if (resultScore < 0) {
             throw new IllegalArgumentException("Result score cannot be less than zero");
