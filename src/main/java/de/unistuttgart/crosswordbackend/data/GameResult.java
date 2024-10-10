@@ -40,7 +40,14 @@ public class GameResult {
     @OneToMany(cascade = CascadeType.ALL)
     Set<GameAnswer> answers;
 
+    /**
+     * The score achieved in the game.
+     */
     int score;
+
+    /**
+     * The reward-coins that the player achieved in the current round.
+     */
     int rewards;
 
     public GameResult(
