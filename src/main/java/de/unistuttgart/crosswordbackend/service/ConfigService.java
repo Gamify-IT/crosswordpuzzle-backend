@@ -7,6 +7,7 @@ import de.unistuttgart.crosswordbackend.mapper.QuestionMapper;
 import de.unistuttgart.crosswordbackend.repositories.ConfigurationRepository;
 import de.unistuttgart.crosswordbackend.repositories.QuestionRepository;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import javax.transaction.Transactional;
@@ -77,7 +78,13 @@ public class ConfigService {
         final String userId = jwtValidatorService.extractUserId(accessToken);
 
         KeybindingDTO keyBindingVolumeLevel = overworldClient.getKeybindingStatistic(userId, "VOLUME_LEVEL", accessToken);
-        Integer volumeLevel = Integer.parseInt(keyBindingVolumeLevel.getKey());
+        Integer volumeLevel;
+
+        try {
+            volumeLevel = Integer.parseInt(keyBindingVolumeLevel.getKey());
+        } catch (NumberFormatException e) {
+            volumeLevel = 1;
+        }
 
 
         Configuration config = configurationRepository
