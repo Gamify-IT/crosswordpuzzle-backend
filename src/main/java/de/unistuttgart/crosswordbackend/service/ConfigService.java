@@ -1,5 +1,6 @@
 package de.unistuttgart.crosswordbackend.service;
 
+import de.unistuttgart.crosswordbackend.Constants;
 import de.unistuttgart.crosswordbackend.clients.OverworldClient;
 import de.unistuttgart.crosswordbackend.data.*;
 import de.unistuttgart.crosswordbackend.mapper.ConfigurationMapper;
@@ -86,6 +87,9 @@ public class ConfigService {
             volumeLevel = 1;
         }
 
+        if (id.equals(UUID.fromString(Constants.tutorialUuid))) {
+            return getTutorialConfiguration();
+        }
 
         Configuration config = configurationRepository
                 .findById(id)
@@ -104,6 +108,30 @@ public class ConfigService {
                                 String.format("There is no configuration with id %s.", id)
                         )
                 );
+    }
+
+    /**
+     * Creates the game configuration for the tutorial
+     *
+     * @return tutorial configuration
+     */
+    private Configuration getTutorialConfiguration() {
+        Question one = new Question("What is the abbreviation of the computing unit in a computer?", "CPU");
+        one.setId(UUID.fromString("00000000-0000-0000-0000-000000000001"));
+        Question two = new Question("What is one possible value of a Boolean variable?", "true");
+        two.setId(UUID.fromString("00000000-0000-0000-0000-000000000002"));
+        Question three = new Question("How dou you call the sensitivity of change of a function?", "derivative");
+        three.setId(UUID.fromString("00000000-0000-0000-0000-000000000003"));
+        Question four = new Question("What are the smallest components that make up a computer called?", "transistors");
+        four.setId(UUID.fromString("00000000-0000-0000-0000-000000000004"));
+        Question five =  new Question("What does the abbreviation 'OS' stand for?", "operating system");
+        five.setId(UUID.fromString("00000000-0000-0000-0000-000000000005"));
+
+        Set<Question> tutorialQuestions = Set.of(one, two, three, four, five);
+        Configuration tutorialConfig = new Configuration("tutorial", tutorialQuestions);
+        tutorialConfig.setVolumeLevel(1);
+
+        return tutorialConfig;
     }
 
     /**
