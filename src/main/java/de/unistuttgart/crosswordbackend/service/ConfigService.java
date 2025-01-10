@@ -80,11 +80,15 @@ public class ConfigService {
 
         KeybindingDTO keyBindingVolumeLevel = overworldClient.getKeybindingStatistic(userId, "VOLUME_LEVEL", accessToken);
         Integer volumeLevel;
-
-        try {
-            volumeLevel = Integer.parseInt(keyBindingVolumeLevel.getKey());
-        } catch (NumberFormatException e) {
-            volumeLevel = 1;
+        if (keyBindingVolumeLevel.getKey() == null || keyBindingVolumeLevel.getKey().isEmpty()) {
+            volumeLevel = 0;
+        }
+        else {
+            try {
+                volumeLevel = Integer.parseInt(keyBindingVolumeLevel.getKey());
+            } catch (NumberFormatException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid volume level format.");
+            }
         }
 
         if (id.equals(UUID.fromString(Constants.tutorialUuid))) {
